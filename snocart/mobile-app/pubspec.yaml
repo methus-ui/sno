@@ -82,3 +82,5 @@ flutter:
           weight: 700
         - asset: assets/font/Roboto-Black.ttf
           weight: 900
+dependency_overrides:
+  web: ^0.4.2
