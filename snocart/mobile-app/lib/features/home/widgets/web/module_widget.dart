@@ -12,8 +12,9 @@ class ModuleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SplashController>(builder: (splashController) {
-      return (ResponsiveHelper.isDesktop(context) && splashController.configModel!.module == null && splashController.moduleList != null
-      && splashController.moduleList!.length > 1) ? Container(
+      final moduleImageBaseUrl = splashController.configModel?.baseUrls?.moduleImageUrl ?? '';
+      final modules = splashController.moduleList ?? const <dynamic>[];
+      return (ResponsiveHelper.isDesktop(context) && splashController.configModel != null && splashController.configModel!.module == null && modules.isNotEmpty && modules.length > 1) ? Container(
         width: 70,
         padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall, vertical: Dimensions.paddingSizeExtraSmall),
         decoration: BoxDecoration(
@@ -25,13 +26,17 @@ class ModuleWidget extends StatelessWidget {
           controller: ScrollController(),
           child: ListView.builder(
             shrinkWrap: true, physics: const NeverScrollableScrollPhysics(),
-            itemCount: splashController.moduleList!.length,
+            itemCount: modules.length,
             padding: const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
             itemBuilder: (context, index) {
+              final module = modules[index];
+              final moduleName = module.moduleName ?? 'module'.tr;
+              final moduleIcon = module.icon ?? '';
+              final imageUrl = moduleImageBaseUrl.isEmpty || moduleIcon.isEmpty ? '' : '$moduleImageBaseUrl/$moduleIcon';
               return Padding(
                 padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeSmall),
                 child: Tooltip(
-                  message: splashController.moduleList![index].moduleName,
+                  message: moduleName,
                   padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
                   decoration: BoxDecoration(
                     color: Theme.of(context).primaryColor,
@@ -45,9 +50,9 @@ class ModuleWidget extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
-                        color: (splashController.module != null && splashController.moduleList![index].id == splashController.module!.id)
+                        color: (splashController.module != null && module.id == splashController.module!.id)
                             ? Theme.of(context).primaryColor.withOpacity(0.2) : Theme.of(context).disabledColor.withOpacity(0.2),
-                        border: (splashController.module != null && splashController.moduleList![index].id == splashController.module!.id)
+                        border: (splashController.module != null && module.id == splashController.module!.id)
                             ? Border.all(color: Theme.of(context).primaryColor) : null,
                       ),
                       padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
@@ -56,7 +61,7 @@ class ModuleWidget extends StatelessWidget {
                         child: SizedBox(
                           height: 25,
                           child: CustomImage(
-                            image: '${splashController.configModel!.baseUrls!.moduleImageUrl}/${splashController.moduleList![index].icon}',
+                            image: imageUrl,
                             height: 30, width: 30, fit: BoxFit.contain,
                           ),
                         ),

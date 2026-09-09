@@ -39,11 +39,15 @@ class CategoryPopUp extends StatelessWidget {
                     crossAxisCount: GetPlatform.isDesktop ? 5 : 4,
                   ),
                   itemBuilder: (context, index) {
+                    final category = categoryController.categoryList![index];
+                    final String categoryName = category.name ?? 'category'.tr;
+                    final String categoryImage = category.image ?? '';
+                    final String categoryBaseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
                     return Padding(
                       padding: const EdgeInsets.only(right: Dimensions.paddingSizeSmall),
                       child: InkWell(
                         onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                          categoryController.categoryList![index].id, categoryController.categoryList![index].name!,
+                          category.id ?? 0, categoryName,
                         )),
                         child: SizedBox(
                           width: 50,
@@ -60,12 +64,12 @@ class CategoryPopUp extends StatelessWidget {
                                     boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 800 : 200]!, blurRadius: 5, spreadRadius: 1)],
                                   ),
                                   child: CustomImage(
-                                    image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${categoryController.categoryList![index].image}',
+                                    image: categoryImage.isEmpty ? '' : '$categoryBaseUrl/$categoryImage',
                                     height: 50, width: 50, fit: BoxFit.cover,
                                   ),
                                 ),
                                 Text(
-                                  categoryController.categoryList![index].name!,
+                                  categoryName,
                                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                                   maxLines: 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                                 ),

@@ -26,6 +26,15 @@ class _WebCategoryViewWidgetState extends State<WebCategoryViewWidget> {
   bool showForwardButton = false;
   bool isFirstTime = true;
 
+  String _categoryName(int index) => widget.categoryController.categoryList?[index].name ?? 'category'.tr;
+  String _categoryImageUrl(int index) {
+    final baseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
+    final image = widget.categoryController.categoryList?[index].image ?? '';
+    return image.isEmpty ? '' : '$baseUrl/$image';
+  }
+
+  int _categoryId(int index) => widget.categoryController.categoryList?[index].id ?? 0;
+
   @override
   void initState() {
     scrollController.addListener(_checkScrollPosition);
@@ -77,13 +86,13 @@ class _WebCategoryViewWidgetState extends State<WebCategoryViewWidget> {
             padding: const EdgeInsets.only(left: Dimensions.paddingSizeExtraSmall),
             itemCount: widget.categoryController.categoryList!.length,
             itemBuilder: (context, index) {
+              final categoryId = _categoryId(index);
+              final categoryName = _categoryName(index);
               return Padding(
                 padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeLarge, right: Dimensions.paddingSizeSmall, top: Dimensions.paddingSizeExtremeLarge),
                 child: InkWell(
                   hoverColor: Colors.transparent,
-                  onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                    widget.categoryController.categoryList![index].id, widget.categoryController.categoryList![index].name!,
-                  )),
+                  onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(categoryId, categoryName)),
                   borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   child: TextHover(
                     builder: (hovered) {
@@ -105,7 +114,7 @@ class _WebCategoryViewWidgetState extends State<WebCategoryViewWidget> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               child: CustomImage(
-                                image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${widget.categoryController.categoryList![index].image}',
+                                image: _categoryImageUrl(index),
                                 height: 80, width: double.infinity, fit: BoxFit.cover,
                               ),
                             ),
@@ -113,7 +122,7 @@ class _WebCategoryViewWidgetState extends State<WebCategoryViewWidget> {
                           const SizedBox(height: Dimensions.paddingSizeSmall),
 
                           Expanded(child: Text(
-                            widget.categoryController.categoryList![index].name!,
+                            categoryName,
                             style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyMedium!.color),
                             maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                           )),
@@ -164,6 +173,15 @@ class _PharmacyCategoryViewState extends State<PharmacyCategoryView> {
   bool showBackButton = false;
   bool showForwardButton = false;
   bool isFirstTime = true;
+
+  String _categoryName(int index) => widget.categoryController.categoryList?[index].name ?? 'category'.tr;
+  String _categoryImageUrl(int index) {
+    final baseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
+    final image = widget.categoryController.categoryList?[index].image ?? '';
+    return image.isEmpty ? '' : '$baseUrl/$image';
+  }
+
+  int _categoryId(int index) => widget.categoryController.categoryList?[index].id ?? 0;
 
   @override
   void initState() {
@@ -216,6 +234,8 @@ class _PharmacyCategoryViewState extends State<PharmacyCategoryView> {
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.categoryController.categoryList!.length,
                 itemBuilder: (context, index) {
+                  final categoryId = _categoryId(index);
+                  final categoryName = _categoryName(index);
                   return Padding(
                     padding: EdgeInsets.only(
                       bottom: Dimensions.paddingSizeLarge, top: Dimensions.paddingSizeSmall,
@@ -224,9 +244,7 @@ class _PharmacyCategoryViewState extends State<PharmacyCategoryView> {
                     ),
                     child: InkWell(
                       hoverColor: Colors.transparent,
-                      onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                        widget.categoryController.categoryList![index].id, widget.categoryController.categoryList![index].name!,
-                      )),
+                      onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(categoryId, categoryName)),
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       child: Container(
                         width: 100,
@@ -246,14 +264,14 @@ class _PharmacyCategoryViewState extends State<PharmacyCategoryView> {
                           ClipRRect(
                             borderRadius: const BorderRadius.only(topLeft: Radius.circular(100), topRight: Radius.circular(100)),
                             child: CustomImage(
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${widget.categoryController.categoryList![index].image}',
+                              image: _categoryImageUrl(index),
                               height: 80, width: double.infinity, fit: BoxFit.cover,
                             ),
                           ),
                           const SizedBox(height: Dimensions.paddingSizeSmall),
 
                           Expanded(child: Text(
-                            widget.categoryController.categoryList![index].name!,
+                            categoryName,
                             style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyMedium!.color),
                             maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                           )),
@@ -305,6 +323,15 @@ class _FoodCategoryViewState extends State<FoodCategoryView> {
   bool showForwardButton = false;
   bool isFirstTime = true;
 
+  String _categoryName(int index) => widget.categoryController.categoryList?[index].name ?? 'category'.tr;
+  String _categoryImageUrl(int index) {
+    final baseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
+    final image = widget.categoryController.categoryList?[index].image ?? '';
+    return image.isEmpty ? '' : '$baseUrl/$image';
+  }
+
+  int _categoryId(int index) => widget.categoryController.categoryList?[index].id ?? 0;
+
   @override
   void initState() {
     scrollController.addListener(_checkScrollPosition);
@@ -354,6 +381,8 @@ class _FoodCategoryViewState extends State<FoodCategoryView> {
               scrollDirection: Axis.horizontal,
               itemCount: widget.categoryController.categoryList!.length,
               itemBuilder: (context, index) {
+                final categoryId = _categoryId(index);
+                final categoryName = _categoryName(index);
                 return Padding(
                   padding: EdgeInsets.only(
                     bottom: Dimensions.paddingSizeSmall, top: Dimensions.paddingSizeLarge,
@@ -362,9 +391,7 @@ class _FoodCategoryViewState extends State<FoodCategoryView> {
                   ),
                   child: InkWell(
                     hoverColor: Colors.transparent,
-                    onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                      widget.categoryController.categoryList![index].id, widget.categoryController.categoryList![index].name!,
-                    )),
+                    onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(categoryId, categoryName)),
                     borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                     child: SizedBox(
                       width: 120,
@@ -378,7 +405,7 @@ class _FoodCategoryViewState extends State<FoodCategoryView> {
                           child: ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(100)),
                             child: CustomImage(
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${widget.categoryController.categoryList![index].image}',
+                              image: _categoryImageUrl(index),
                               height: 120, width: double.infinity, fit: BoxFit.cover,
                             ),
                           ),
@@ -386,7 +413,7 @@ class _FoodCategoryViewState extends State<FoodCategoryView> {
                         const SizedBox(height: Dimensions.paddingSizeSmall),
 
                         Expanded(child: Text(
-                          widget.categoryController.categoryList![index].name!,
+                          categoryName,
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).textTheme.bodyMedium!.color),
                           maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                         )),
@@ -417,6 +444,7 @@ class _FoodCategoryViewState extends State<FoodCategoryView> {
             isRight: false,
           ),
         ),
+
     ]);
   }
 }

@@ -176,9 +176,10 @@ class _WebNewHomeScreenState extends State<WebNewHomeScreen> {
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 20, 0, 5),
               child: GetBuilder<StoreController>(builder: (storeController) {
+                final bool showRestaurantText = Get.find<SplashController>().configModel?.moduleConfig?.module?.showRestaurantText == true;
                 return Row(children: [
                   Expanded(child: Text(
-                    '${storeController.storeModel?.totalSize ?? 0} ${Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText! ? 'restaurants'.tr : 'stores'.tr}',
+                    '${storeController.storeModel?.totalSize ?? 0} ${showRestaurantText ? 'restaurants'.tr : 'stores'.tr}',
                     style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                   )),
 

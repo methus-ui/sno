@@ -47,11 +47,21 @@ class PopularItemView extends StatelessWidget {
               padding: const EdgeInsets.only(left: Dimensions.paddingSizeSmall),
               itemCount: itemList.length > 10 ? 10 : itemList.length,
               itemBuilder: (context, index){
+                final item = itemList[index];
+                final String itemName = item.name ?? 'item'.tr;
+                final String storeName = item.storeName ?? 'store'.tr;
+                final String itemImage = item.image ?? '';
+                final String itemBaseUrl = Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl ?? '';
+                final bool vegEnabled = Get.find<SplashController>().configModel?.moduleConfig?.module?.vegNonVeg == true
+                    && Get.find<SplashController>().configModel?.toggleVegNonVeg == true;
+                final bool unitEnabled = Get.find<SplashController>().configModel?.moduleConfig?.module?.unit == true;
+                final double discount = item.discount ?? 0;
+                final double startingPrice = itemController.getStartingPrice(item) ?? 0;
                 return Padding(
                   padding: const EdgeInsets.fromLTRB(2, 2, Dimensions.paddingSizeSmall, 2),
                   child: InkWell(
                     onTap: () {
-                      Get.find<ItemController>().navigateToItemPage(itemList[index], context);
+                      Get.find<ItemController>().navigateToItemPage(item, context);
                     },
                     child: Stack(
                       children: [
@@ -69,15 +79,14 @@ class PopularItemView extends StatelessWidget {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 child: CustomImage(
-                                  image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                                      '/${itemList[index].image}',
+                                  image: itemImage.isEmpty ? '' : '$itemBaseUrl/$itemImage',
                                   height: 80, width: 80, fit: BoxFit.cover,
                                 ),
                               ),
 
-                              OrganicTag(item: itemList[index], placeInImage: true),
+                              OrganicTag(item: item, placeInImage: true),
 
-                              itemController.isAvailable(itemList[index]) ? const SizedBox() : const NotAvailableWidget(),
+                              itemController.isAvailable(item) ? const SizedBox() : const NotAvailableWidget(),
                             ]),
 
                             Expanded(
@@ -88,7 +97,7 @@ class PopularItemView extends StatelessWidget {
                                     Row(children: [
                                       Expanded(
                                         child: Text(
-                                          itemList[index].name!,
+                                          itemName,
                                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                                           maxLines: 1, overflow: TextOverflow.ellipsis,
                                         ),
@@ -97,25 +106,25 @@ class PopularItemView extends StatelessWidget {
                                     ]),
                                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                                    (Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg! && Get.find<SplashController>().configModel!.toggleVegNonVeg!)
-                                        ? Image.asset(itemList[index].veg == 0 ? Images.nonVegImage : Images.vegImage,
+                                    vegEnabled
+                                        ? Image.asset(item.veg == 0 ? Images.nonVegImage : Images.vegImage,
                                         height: 10, width: 10, fit: BoxFit.contain) : const SizedBox(),
                                   ]),
                                   const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                                   Text(
-                                    itemList[index].storeName!,
+                                    storeName,
                                     style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
                                     maxLines: 1, overflow: TextOverflow.ellipsis,
                                   ),
 
                                   RatingBar(
-                                    rating: itemList[index].avgRating, size: 12,
-                                    ratingCount: itemList[index].ratingCount,
+                                    rating: item.avgRating, size: 12,
+                                    ratingCount: item.ratingCount,
                                   ),
 
-                                  (Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && itemList[index].unitType != null) ? Text(
-                                    '(${ itemList[index].unitType ?? ''})',
+                                  unitEnabled && item.unitType != null ? Text(
+                                    '(${item.unitType ?? ''})',
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).hintColor),
                                   ) : const SizedBox(),
 
@@ -124,15 +133,15 @@ class PopularItemView extends StatelessWidget {
                                       child: Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
                                         Text(
                                           PriceConverter.convertPrice(
-                                            itemController.getStartingPrice(itemList[index]),
-                                            discount: itemList[index].discount,
-                                            discountType: itemList[index].discountType,
+                                            startingPrice,
+                                            discount: discount,
+                                            discountType: item.discountType,
                                           ), textDirection: TextDirection.ltr,
                                           style: robotoBold.copyWith(fontSize: Dimensions.fontSizeSmall),
                                         ),
-                                        SizedBox(width: itemList[index].discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
-                                        itemList[index].discount! > 0  ? Flexible(child: Text(
-                                          PriceConverter.convertPrice(itemController.getStartingPrice(itemList[index])),
+                                        SizedBox(width: discount > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                                        discount > 0  ? Flexible(child: Text(
+                                          PriceConverter.convertPrice(startingPrice),
                                           style: robotoMedium.copyWith(
                                             fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                                             decoration: TextDecoration.lineThrough,
@@ -154,8 +163,8 @@ class PopularItemView extends StatelessWidget {
                           child: CornerDiscountTag(
                             bannerPosition: Get.find<LocalizationController>().isLtr ? CornerBannerPosition.topRight : CornerBannerPosition.topLeft,
                             elevation: 0,
-                            discount: itemController.getDiscount(itemList[index]),
-                            discountType: itemController.getDiscountType(itemList[index]),
+                            discount: itemController.getDiscount(item),
+                            discountType: itemController.getDiscountType(item),
                           ),
 
                         ),

@@ -23,8 +23,20 @@ class ReviewItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isShop = Get.find<SplashController>().module != null && Get.find<SplashController>().module!.moduleType.toString() == AppConstants.ecommerce;
-    bool isFood = Get.find<SplashController>().module != null && Get.find<SplashController>().module!.moduleType.toString() == AppConstants.food;
+    final splashController = Get.find<SplashController>();
+    final isShop = splashController.module != null && splashController.module!.moduleType.toString() == AppConstants.ecommerce;
+    final isFood = splashController.module != null && splashController.module!.moduleType.toString() == AppConstants.food;
+    final itemData = item;
+    if (itemData == null) {
+      return const SizedBox();
+    }
+    final String itemImageBaseUrl = splashController.configModel?.baseUrls?.itemImageUrl ?? '';
+    final String itemImage = itemData.image == null || itemData.image!.isEmpty ? '' : '$itemImageBaseUrl/${itemData.image!}';
+    final String itemName = itemData.name ?? 'item'.tr;
+    final String storeName = itemData.storeName ?? 'store'.tr;
+    final double itemRating = itemData.avgRating ?? 0.0;
+    final int itemRatingCount = itemData.ratingCount ?? 0;
+    final bool unitEnabled = splashController.configModel?.moduleConfig?.module?.unit ?? false;
 
     return OnHover(
       isItem: true,
@@ -36,7 +48,7 @@ class ReviewItemCard extends StatelessWidget {
           boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.1), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1))],
         ),
         child: CustomInkWell(
-          onTap: () => Get.find<ItemController>().navigateToItemPage(item, context),
+          onTap: () => Get.find<ItemController>().navigateToItemPage(itemData, context),
           radius: Dimensions.radiusDefault,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
@@ -49,21 +61,20 @@ class ReviewItemCard extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
                     child: CustomImage(
                       placeholder: Images.placeholder,
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                          '/${item!.image}',
+                      image: itemImage,
                       fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                     ),
                   ),
                 ),
 
                 AddFavouriteView(
-                  item: item!,
+                  item: itemData,
                 ),
 
                 DiscountTag(
                   isFloating: true,
-                  discount: Get.find<ItemController>().getDiscount(item!),
-                  discountType: Get.find<ItemController>().getDiscountType(item!),
+                  discount: Get.find<ItemController>().getDiscount(itemData),
+                  discountType: Get.find<ItemController>().getDiscountType(itemData),
                 ),
               ],
               ),
@@ -76,39 +87,36 @@ class ReviewItemCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: isFeatured ? CrossAxisAlignment.start : CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                   Text(
-                    item!.storeName!, maxLines: 1, overflow: TextOverflow.ellipsis,
+                    storeName, maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
                   ),
 
-                  Text(item!.name!, maxLines: 1, overflow: TextOverflow.ellipsis, style: robotoBold),
+                  Text(itemName, maxLines: 1, overflow: TextOverflow.ellipsis, style: robotoBold),
 
                   Row(mainAxisAlignment: isFeatured ? MainAxisAlignment.start : MainAxisAlignment.center, children: [
                     Icon(Icons.star, size: 14, color: Theme.of(context).primaryColor),
                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                    Text(item!.avgRating!.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                    Text(itemRating.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                    Text("(${item!.ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                    Text('($itemRatingCount)', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
                   ]),
 
                   Wrap(crossAxisAlignment: WrapCrossAlignment.center, alignment: WrapAlignment.start, children: [
-                    item!.discount != null && item!.discount! > 0  ? Text(
-                      PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(item!)),
+                    (itemData.discount ?? 0) > 0 ? Text(
+                      PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(itemData)),
                       style: robotoRegular.copyWith(
                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                         decoration: TextDecoration.lineThrough,
                       ),
                     ) : const SizedBox(),
-                    SizedBox(width: item!.discount != null && item!.discount! > 0  ? Dimensions.paddingSizeExtraSmall : 0),
+                    SizedBox(width: (itemData.discount ?? 0) > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
                     Text(
-                      PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(item!), discount: item!.discount,
-                          discountType: item!.discountType),
+                      PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(itemData), discount: itemData.discount,
+                          discountType: itemData.discountType),
                       style: robotoMedium, textDirection: TextDirection.ltr,
                     ),
                   ]),
-                  // SizedBox(height: item!.discount != null && item!.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
-
-
                 ]),
               ),
             ),
@@ -131,8 +139,7 @@ class ReviewItemCard extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
                   child: CustomImage(
                     placeholder: Images.placeholder,
-                    image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                        '/${item!.image}',
+                    image: itemImage,
                     fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                   ),
                 ),
@@ -140,16 +147,16 @@ class ReviewItemCard extends StatelessWidget {
 
               AddFavouriteView(
                 top: 10, right: 10,
-                item: item!,
+                item: itemData,
               ),
 
               DiscountTag(
                 isFloating: true,
-                discount: Get.find<ItemController>().getDiscount(item!),
-                discountType: Get.find<ItemController>().getDiscountType(item!),
+                discount: Get.find<ItemController>().getDiscount(itemData),
+                discountType: Get.find<ItemController>().getDiscountType(itemData),
               ),
 
-              OrganicTag(item: item!, placeInImage: false),
+              OrganicTag(item: itemData, placeInImage: false),
 
               Positioned(
                 bottom: 0, left: 0, right: 0,
@@ -170,36 +177,35 @@ class ReviewItemCard extends StatelessWidget {
                             const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                           Text(
-                            item!.storeName!, maxLines: 1, overflow: TextOverflow.ellipsis,
+                            storeName, maxLines: 1, overflow: TextOverflow.ellipsis,
                             style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
                           ),
 
-                          Text(item!.name!, maxLines: 1, overflow: TextOverflow.ellipsis, style: robotoBold),
+                          Text(itemName, maxLines: 1, overflow: TextOverflow.ellipsis, style: robotoBold),
 
                           Row(mainAxisAlignment: isFeatured ? MainAxisAlignment.start : MainAxisAlignment.center, children: [
                             Icon(Icons.star, size: 14, color: Theme.of(context).primaryColor),
                             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                            Text(item!.avgRating!.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                            Text(itemRating.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                            Text("(${item!.ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                            Text('($itemRatingCount)', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
                           ]),
 
                           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            item!.discount! > 0  ? Text(
+                            (itemData.discount ?? 0) > 0 ? Text(
                               PriceConverter.convertPrice(
-                                Get.find<ItemController>().getStartingPrice(item!),
+                                Get.find<ItemController>().getStartingPrice(itemData),
                               ),
                               style: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough,
                               ),
                             ) : const SizedBox(),
-                            SizedBox(width: item!.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
                             Text(
                               PriceConverter.convertPrice(
-                                Get.find<ItemController>().getStartingPrice(item!),
-                                discount: item!.discount,
-                                discountType: item!.discountType,
+                                Get.find<ItemController>().getStartingPrice(itemData),
+                                discount: itemData.discount,
+                                discountType: itemData.discountType,
                               ),
                               style: robotoMedium, textDirection: TextDirection.ltr,
                             ),
@@ -208,38 +214,37 @@ class ReviewItemCard extends StatelessWidget {
                         ) : Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                           const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
-                          Text(item!.name!, style: robotoBold, maxLines: 1, overflow: TextOverflow.ellipsis),
+                          Text(itemName, style: robotoBold, maxLines: 1, overflow: TextOverflow.ellipsis),
 
                           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                             Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
                             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                            Text(item!.avgRating!.toStringAsFixed(1), style: robotoRegular),
+                            Text(itemRating.toStringAsFixed(1), style: robotoRegular),
                             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                            Text("(${item!.ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                            Text('($itemRatingCount)', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
                           ],
                           ),
 
-                          (Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && item!.unitType != null) ? Text(
-                            '(${item!.unitType ?? ''})',
+                          (unitEnabled && itemData.unitType != null) ? Text(
+                            '(${itemData.unitType ?? ''})',
                             style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor),
                           ) : const SizedBox(),
 
                           Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                            item!.discount! > 0  ? Text(
+                            (itemData.discount ?? 0) > 0 ? Text(
                               PriceConverter.convertPrice(
-                                Get.find<ItemController>().getStartingPrice(item!),
+                                Get.find<ItemController>().getStartingPrice(itemData),
                               ),
                               style: robotoRegular.copyWith(
                                 fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough,
                               ),
                             ) : const SizedBox(),
-                            // SizedBox(height: item!.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
                             Text(
                               PriceConverter.convertPrice(
-                                Get.find<ItemController>().getStartingPrice(item!),
-                                discount: item!.discount,
-                                discountType: item!.discountType,
+                                Get.find<ItemController>().getStartingPrice(itemData),
+                                discount: itemData.discount,
+                                discountType: itemData.discountType,
                               ),
                               style: robotoMedium, textDirection: TextDirection.ltr,
                             ),
@@ -248,21 +253,20 @@ class ReviewItemCard extends StatelessWidget {
                         ),
                       ),
 
-
                       Positioned(
                         top: -15, left: 0, right: 0,
                         child: CartCountView(
-                          item: item!,
+                          item: itemData,
                           child: Center(
                             child: Container(
                               alignment: Alignment.center,
                               width: 65, height: 30,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(112),
-                                color: Theme.of(context).cardColor,
+                                color: Theme.of(context).primaryColor,
                                 boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.1), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1))],
                               ),
-                              child: Text("add".tr, style: robotoBold.copyWith(color: Theme.of(context).primaryColor)),
+                              child: Text("add".tr, style: robotoBold.copyWith(color: Theme.of(context).cardColor)),
                             ),
                           ),
                         ),
@@ -271,7 +275,6 @@ class ReviewItemCard extends StatelessWidget {
                   ),
                 ),
               ),
-
             ]),
           ),
         ]),

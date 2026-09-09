@@ -72,13 +72,15 @@ class SplashScreenState extends State<SplashScreen> {
     Get.find<SplashController>().getConfigData().then((isSuccess) {
       if(isSuccess) {
         Timer(const Duration(seconds: 1), () async {
-          double? minimumVersion = 0;
+          final config = Get.find<SplashController>().configModel;
+          double minimumVersion = 0;
           if(GetPlatform.isAndroid) {
-            minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionAndroid;
+            minimumVersion = config?.appMinimumVersionAndroid ?? 0;
           }else if(GetPlatform.isIOS) {
-            minimumVersion = Get.find<SplashController>().configModel!.appMinimumVersionIos;
+            minimumVersion = config?.appMinimumVersionIos ?? 0;
           }
-          if(AppConstants.appVersion < minimumVersion! || Get.find<SplashController>().configModel!.maintenanceMode!) {
+          final bool isMaintenanceMode = config?.maintenanceMode ?? false;
+          if((minimumVersion > 0 && AppConstants.appVersion < minimumVersion) || isMaintenanceMode) {
             Get.offNamed(RouteHelper.getUpdateRoute(AppConstants.appVersion < minimumVersion));
           }else {
             if(widget.body != null) {
@@ -101,7 +103,7 @@ class SplashScreenState extends State<SplashScreen> {
                   Get.find<LocationController>().navigateToLocationScreen('splash', offNamed: true);
                 }
               } else {
-                if (Get.find<SplashController>().showIntro()!) {
+                if (Get.find<SplashController>().showIntro() ?? false) {
                   if(AppConstants.languages.length > 1) {
                     Get.offNamed(RouteHelper.getLanguageRoute('splash'));
                   }else {

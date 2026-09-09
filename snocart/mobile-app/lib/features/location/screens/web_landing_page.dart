@@ -70,7 +70,7 @@ class _WebLandingPageState extends State<WebLandingPage> {
 
   @override
   Widget build(BuildContext context) {
-    _isRtl = intl.Bidi.isRtlLanguage(Get.locale!.languageCode);
+    _isRtl = intl.Bidi.isRtlLanguage(Get.locale?.languageCode ?? '');
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -100,8 +100,8 @@ class _WebLandingPageState extends State<WebLandingPage> {
                 ])),
                 Expanded(child: ClipPath(clipper: CustomPath(isRtl: _isRtl), child: ClipRRect(
                   borderRadius: BorderRadius.horizontal(
-                    right: _isRtl! ? const Radius.circular(0) : const Radius.circular(Dimensions.radiusDefault),
-                    left: _isRtl! ? const Radius.circular(Dimensions.radiusDefault) : const Radius.circular(0),
+                    right: _isRtl ?? false ? const Radius.circular(0) : const Radius.circular(Dimensions.radiusDefault),
+                    left: _isRtl ?? false ? const Radius.circular(Dimensions.radiusDefault) : const Radius.circular(0),
                   ),
                   child: CustomImage(
                     image: '${splashController.landingModel?.baseUrls?.fixedHeaderImage ?? ''}/${splashController.landingModel != null
@@ -158,7 +158,7 @@ class _WebLandingPageState extends State<WebLandingPage> {
                               borderRadius: BorderRadius.circular(10),
                               borderSide: BorderSide(color: Theme.of(context).primaryColor.withOpacity(0.3), width: 1),
                             ),
-                            hintStyle: Theme.of(context).textTheme.displayMedium!.copyWith(
+                            hintStyle: (Theme.of(context).textTheme.displayMedium ?? const TextStyle()).copyWith(
                               fontSize: Dimensions.fontSizeDefault, color: Theme.of(context).disabledColor,
                             ),
                             filled: true, fillColor: Theme.of(context).cardColor,
@@ -172,8 +172,8 @@ class _WebLandingPageState extends State<WebLandingPage> {
                               icon: Icon(Icons.my_location, color: Theme.of(context).primaryColor),
                             ),
                           ),
-                          style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                            color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeLarge,
+                          style: (Theme.of(context).textTheme.displayMedium ?? const TextStyle()).copyWith(
+                            color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black, fontSize: Dimensions.fontSizeLarge,
                           ),
                         ),
                         suggestionsCallback: (pattern) async {
@@ -186,8 +186,8 @@ class _WebLandingPageState extends State<WebLandingPage> {
                               const Icon(Icons.location_on),
                               Expanded(child: Text(
                                 suggestion.description ?? '', maxLines: 1, overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                                  color: Theme.of(context).textTheme.bodyLarge!.color, fontSize: Dimensions.fontSizeLarge,
+                                style: (Theme.of(context).textTheme.displayMedium ?? const TextStyle()).copyWith(
+                                  color: Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black, fontSize: Dimensions.fontSizeLarge,
                                 ),
                               )),
                             ]),
@@ -308,19 +308,19 @@ class _WebLandingPageState extends State<WebLandingPage> {
                             child: Html(
                               data: splashController.moduleList![index].description ?? '', shrinkWrap: true,
                               onLinkTap: (url, context, attributes, element) {
-                                if(url!.startsWith('www.')) {
+                                if(url != null && url.startsWith('www.')) {
                                   url = 'https://$url';
                                 }
                                 if (kDebugMode) {
                                   print('Redirect to url: $url');
                                 }
-                                html.window.open(url, "_blank");
+                                if(url != null) html.window.open(url, "_blank");
                               },
                             ),
                           )),
                         ])),
                         CustomImage(
-                          image: '${_config!.baseUrls!.moduleImageUrl}/${splashController.moduleList![index].thumbnail}',
+                          image: '${_config?.baseUrls?.moduleImageUrl ?? ''}/${splashController.moduleList![index].thumbnail ?? ''}',
                           height: 450, width: 450,
                         ),
                       ]),
@@ -347,7 +347,7 @@ class _WebLandingPageState extends State<WebLandingPage> {
                               _pageController.animateToPage(index, duration: const Duration(seconds: 2), curve: Curves.easeInOut);
                             },
                             child: CustomImage(
-                              image: '${_config!.baseUrls!.moduleImageUrl}/${splashController.moduleList![index].icon}',
+                              image: '${_config?.baseUrls?.moduleImageUrl ?? ''}/${splashController.moduleList![index].icon ?? ''}',
                               height: 45, width: 45,
                             ),
                           ),
@@ -448,18 +448,19 @@ class _WebLandingPageState extends State<WebLandingPage> {
 
 class CustomPath extends CustomClipper<Path> {
   final bool? isRtl;
-  CustomPath({required this.isRtl});
+  CustomPath({this.isRtl});
 
   @override
   Path getClip(Size size) {
+    final bool isRightToLeft = isRtl ?? false;
     final path = Path();
-    if(isRtl!) {
+    if (isRightToLeft) {
       path..moveTo(0, size.height)
         ..lineTo(size.width, size.height)
         ..lineTo(size.width*0.7, 0)
         ..lineTo(0, 0)
         ..close();
-    }else {
+    } else {
       path..moveTo(0, size.height)
         ..lineTo(size.width*0.3, 0)
         ..lineTo(size.width, 0)

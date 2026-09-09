@@ -180,12 +180,11 @@ class _MyAppState extends State<MyApp> {
                             widget!,
                             GetBuilder<SplashController>(
                                 builder: (splashController) {
+                              final String cookieText =
+                                  splashController.configModel?.cookiesText ?? '';
                               if (!splashController.savedCookiesData &&
                                   !splashController.getAcceptCookiesStatus(
-                                      splashController.configModel != null
-                                          ? splashController
-                                              .configModel!.cookiesText!
-                                          : '')) {
+                                      cookieText)) {
                                 return ResponsiveHelper.isWeb()
                                     ? const Align(
                                         alignment: Alignment.bottomCenter,

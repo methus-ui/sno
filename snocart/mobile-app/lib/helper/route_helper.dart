@@ -896,17 +896,16 @@ class RouteHelper {
 
   static Widget getRoute(Widget navigateTo,
       {AccessLocationScreen? locationScreen, bool byPuss = false}) {
+    final config = Get.find<SplashController>().configModel;
     double? minimumVersion = 0;
     if (GetPlatform.isAndroid) {
-      minimumVersion =
-          Get.find<SplashController>().configModel!.appMinimumVersionAndroid;
+      minimumVersion = config?.appMinimumVersionAndroid ?? 0;
     } else if (GetPlatform.isIOS) {
-      minimumVersion =
-          Get.find<SplashController>().configModel!.appMinimumVersionIos;
+      minimumVersion = config?.appMinimumVersionIos ?? 0;
     }
-    return AppConstants.appVersion < minimumVersion!
+    return (minimumVersion > 0 && AppConstants.appVersion < minimumVersion)
         ? const UpdateScreen(isUpdate: true)
-        : Get.find<SplashController>().configModel!.maintenanceMode!
+        : (config?.maintenanceMode ?? false)
             ? const UpdateScreen(isUpdate: false)
             : (AddressHelper.getUserAddressFromSharedPref() == null && !byPuss)
                 ? AccessLocationScreen(

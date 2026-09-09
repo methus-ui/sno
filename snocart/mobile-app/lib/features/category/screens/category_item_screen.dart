@@ -40,7 +40,7 @@ class CategoryItemScreenState extends State<CategoryItemScreen> with TickerProvi
       if (scrollController.position.pixels == scrollController.position.maxScrollExtent
           && Get.find<CategoryController>().categoryItemList != null
           && !Get.find<CategoryController>().isLoading) {
-        int pageSize = (Get.find<CategoryController>().pageSize! / 10).ceil();
+        int pageSize = ((Get.find<CategoryController>().pageSize ?? 10) / 10).ceil();
         if (Get.find<CategoryController>().offset < pageSize) {
           if (kDebugMode) {
             print('end of the page');
@@ -48,7 +48,7 @@ class CategoryItemScreenState extends State<CategoryItemScreen> with TickerProvi
           Get.find<CategoryController>().showBottomLoader();
           Get.find<CategoryController>().getCategoryItemList(
             Get.find<CategoryController>().subCategoryIndex == 0 ? widget.categoryID
-                : Get.find<CategoryController>().subCategoryList![Get.find<CategoryController>().subCategoryIndex].id.toString(),
+                : (Get.find<CategoryController>().subCategoryList?.isNotEmpty ?? false) ? Get.find<CategoryController>().subCategoryList![Get.find<CategoryController>().subCategoryIndex].id.toString() : widget.categoryID,
             Get.find<CategoryController>().offset+1, Get.find<CategoryController>().type, false,
           );
         }
@@ -58,7 +58,7 @@ class CategoryItemScreenState extends State<CategoryItemScreen> with TickerProvi
       if (storeScrollController.position.pixels == storeScrollController.position.maxScrollExtent
           && Get.find<CategoryController>().categoryStoreList != null
           && !Get.find<CategoryController>().isLoading) {
-        int pageSize = (Get.find<CategoryController>().restPageSize! / 10).ceil();
+        int pageSize = ((Get.find<CategoryController>().restPageSize ?? 10) / 10).ceil();
         if (Get.find<CategoryController>().offset < pageSize) {
           if (kDebugMode) {
             print('end of the page');
@@ -66,7 +66,7 @@ class CategoryItemScreenState extends State<CategoryItemScreen> with TickerProvi
           Get.find<CategoryController>().showBottomLoader();
           Get.find<CategoryController>().getCategoryStoreList(
             Get.find<CategoryController>().subCategoryIndex == 0 ? widget.categoryID
-                : Get.find<CategoryController>().subCategoryList![Get.find<CategoryController>().subCategoryIndex].id.toString(),
+                : (Get.find<CategoryController>().subCategoryList?.isNotEmpty ?? false) ? Get.find<CategoryController>().subCategoryList![Get.find<CategoryController>().subCategoryIndex].id.toString() : widget.categoryID,
             Get.find<CategoryController>().offset+1, Get.find<CategoryController>().type, false,
           );
         }
@@ -82,17 +82,17 @@ class CategoryItemScreenState extends State<CategoryItemScreen> with TickerProvi
       if(catController.isSearching ? catController.searchItemList != null : catController.categoryItemList != null) {
         item = [];
         if (catController.isSearching) {
-          item.addAll(catController.searchItemList!);
+          item.addAll(catController.searchItemList ?? []);
         } else {
-          item.addAll(catController.categoryItemList!);
+          item.addAll(catController.categoryItemList ?? []);
         }
       }
       if(catController.isSearching ? catController.searchStoreList != null : catController.categoryStoreList != null) {
         stores = [];
         if (catController.isSearching) {
-          stores.addAll(catController.searchStoreList!);
+          stores.addAll(catController.searchStoreList ?? []);
         } else {
-          stores.addAll(catController.categoryStoreList!);
+          stores.addAll(catController.categoryStoreList ?? []);
         }
       }
 

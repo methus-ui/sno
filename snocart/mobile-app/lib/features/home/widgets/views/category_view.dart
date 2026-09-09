@@ -24,6 +24,7 @@ class CategoryView extends StatelessWidget {
       bool isFood = splashController.module != null && splashController.module!.moduleType.toString() == AppConstants.food;
 
       return GetBuilder<CategoryController>(builder: (categoryController) {
+        final String categoryBaseUrl = splashController.configModel?.baseUrls?.categoryImageUrl ?? '';
         return (categoryController.categoryList != null && categoryController.categoryList!.isEmpty)
         ? const SizedBox() : isPharmacy ? PharmacyCategoryView(categoryController: categoryController)
           : isFood ? FoodCategoryView(categoryController: categoryController) : Column(
@@ -40,15 +41,19 @@ class CategoryView extends StatelessWidget {
                       physics: const BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
+                        final category = categoryController.categoryList![index];
+                        final String categoryName = category.name ?? 'category'.tr;
+                        final String categoryImage = category.image ?? '';
+                        final bool isSeeAll = index == 9 && categoryController.categoryList!.length > 10;
                         return Padding(
                           padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault, right: Dimensions.paddingSizeSmall, top: Dimensions.paddingSizeDefault),
                           child: InkWell(
                             onTap: () {
-                              if(index == 9 && categoryController.categoryList!.length > 10) {
+                              if(isSeeAll) {
                                 Get.toNamed(RouteHelper.getCategoryRoute());
                               } else {
                                 Get.toNamed(RouteHelper.getCategoryItemRoute(
-                                  categoryController.categoryList![index].id, categoryController.categoryList![index].name!,
+                                  category.id ?? 0, categoryName,
                                 ));
                               }
                             },
@@ -61,12 +66,12 @@ class CategoryView extends StatelessWidget {
                                     ClipRRect(
                                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                       child: CustomImage(
-                                        image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${categoryController.categoryList![index].image}',
+                                        image: categoryImage.isEmpty ? '' : '$categoryBaseUrl/$categoryImage',
                                         height: 75, width: 75, fit: BoxFit.cover,
                                       ),
                                     ),
 
-                                    (index == 9 && categoryController.categoryList!.length > 10) ? Positioned(
+                                    isSeeAll ? Positioned(
                                       right: 0, left: 0, top: 0, bottom: 0,
                                       child: Container(
                                         decoration: BoxDecoration(
@@ -98,8 +103,8 @@ class CategoryView extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(right: index == 0 ? Dimensions.paddingSizeExtraSmall : 0),
                                   child: Text(
-                                    (index == 9 && categoryController.categoryList!.length > 10) ? 'see_all'.tr : categoryController.categoryList![index].name!,
-                                    style: robotoMedium.copyWith(fontSize: 11, color: (index == 9 && categoryController.categoryList!.length > 10) ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color),
+                                    isSeeAll ? 'see_all'.tr : categoryName,
+                                    style: robotoMedium.copyWith(fontSize: 11, color: isSeeAll ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color),
                                     maxLines: Get.find<LocalizationController>().isLtr ? 2 : 1, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -151,6 +156,7 @@ class PharmacyCategoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
+    final String categoryBaseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       SizedBox(
         height: 160,
@@ -162,15 +168,19 @@ class PharmacyCategoryView extends StatelessWidget {
           padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault, top: Dimensions.paddingSizeDefault),
           itemCount: categoryController.categoryList!.length > 10 ? 10 : categoryController.categoryList!.length,
           itemBuilder: (context, index) {
+            final category = categoryController.categoryList![index];
+            final String categoryName = category.name ?? 'category'.tr;
+            final String categoryImage = category.image ?? '';
+            final bool isSeeAll = index == 9 && categoryController.categoryList!.length > 10;
             return Padding(
               padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault, right: Dimensions.paddingSizeSmall, top: Dimensions.paddingSizeDefault),
               child: InkWell(
                 onTap: () {
-                  if(index == 9 && categoryController.categoryList!.length > 10) {
+                  if(isSeeAll) {
                     Get.toNamed(RouteHelper.getCategoryRoute());
                   } else {
                     Get.toNamed(RouteHelper.getCategoryItemRoute(
-                      categoryController.categoryList![index].id, categoryController.categoryList![index].name!,
+                      category.id ?? 0, categoryName,
                     ));
                   }
                 },
@@ -196,12 +206,12 @@ class PharmacyCategoryView extends StatelessWidget {
                         ClipRRect(
                           borderRadius: const BorderRadius.only(topLeft: Radius.circular(100), topRight: Radius.circular(100)),
                           child: CustomImage(
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${categoryController.categoryList![index].image}',
+                            image: categoryImage.isEmpty ? '' : '$categoryBaseUrl/$categoryImage',
                             height: 60, width: double.infinity, fit: BoxFit.cover,
                           ),
                         ),
 
-                        (index == 9 && categoryController.categoryList!.length > 10) ? Positioned(
+                        isSeeAll ? Positioned(
                           right: 0, left: 0, top: 0, bottom: 0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -230,9 +240,9 @@ class PharmacyCategoryView extends StatelessWidget {
                     const SizedBox(height: Dimensions.paddingSizeSmall),
 
                     Expanded(child: Text(
-                      (index == 9 && categoryController.categoryList!.length > 10) ? 'see_all'.tr :  categoryController.categoryList![index].name!,
+                      isSeeAll ? 'see_all'.tr : categoryName,
                       style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall,
-                      color: (index == 9 && categoryController.categoryList!.length > 10) ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color),
+                      color: isSeeAll ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color),
                       maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                     )),
                   ]),
@@ -253,6 +263,7 @@ class FoodCategoryView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ScrollController scrollController = ScrollController();
+    final String categoryBaseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
     return Stack(children: [
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         SizedBox(
@@ -265,15 +276,19 @@ class FoodCategoryView extends StatelessWidget {
             padding: const EdgeInsets.only(left: Dimensions.paddingSizeDefault, top: Dimensions.paddingSizeDefault),
             itemCount: categoryController.categoryList!.length > 10 ? 10 : categoryController.categoryList!.length,
             itemBuilder: (context, index) {
+              final category = categoryController.categoryList![index];
+              final String categoryName = category.name ?? 'category'.tr;
+              final String categoryImage = category.image ?? '';
+              final bool isSeeAll = index == 9 && categoryController.categoryList!.length > 10;
               return Padding(
                 padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault, right: Dimensions.paddingSizeDefault, top: Dimensions.paddingSizeDefault),
                 child: InkWell(
                   onTap: () {
-                    if(index == 9 && categoryController.categoryList!.length > 10) {
+                    if(isSeeAll) {
                       Get.toNamed(RouteHelper.getCategoryRoute());
                     } else {
                       Get.toNamed(RouteHelper.getCategoryItemRoute(
-                        categoryController.categoryList![index].id, categoryController.categoryList![index].name!,
+                        category.id ?? 0, categoryName,
                       ));
                     }
                   },
@@ -287,12 +302,12 @@ class FoodCategoryView extends StatelessWidget {
                           ClipRRect(
                             borderRadius: const BorderRadius.all(Radius.circular(100)),
                             child: CustomImage(
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${categoryController.categoryList![index].image}',
+                              image: categoryImage.isEmpty ? '' : '$categoryBaseUrl/$categoryImage',
                               height: 60, width: double.infinity, fit: BoxFit.cover,
                             ),
                           ),
 
-                          (index == 9 && categoryController.categoryList!.length > 10) ? Positioned(
+                          isSeeAll ? Positioned(
                             right: 0, left: 0, top: 0, bottom: 0,
                             child: Container(
                               decoration: BoxDecoration(
@@ -321,8 +336,8 @@ class FoodCategoryView extends StatelessWidget {
                       const SizedBox(height: Dimensions.paddingSizeSmall),
 
                       Expanded(child: Text(
-                        (index == 9 && categoryController.categoryList!.length > 10) ?  'see_all'.tr : categoryController.categoryList![index].name ?? '',
-                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: (index == 9 && categoryController.categoryList!.length > 10) ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color),
+                        isSeeAll ? 'see_all'.tr : categoryName,
+                        style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall, color: isSeeAll ? Theme.of(context).primaryColor : Theme.of(context).textTheme.bodyMedium!.color),
                         maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center,
                       )),
                     ]),

@@ -22,8 +22,15 @@ class ItemThatYouLoveCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? discount = item.storeDiscount == 0 ? item.discount : item.storeDiscount;
-    String? discountType = item.storeDiscount == 0 ? item.discountType : 'percent';
+    final splashController = Get.find<SplashController>();
+    final String itemImageBaseUrl = splashController.configModel?.baseUrls?.itemImageUrl ?? '';
+    final String itemImage = (item.image ?? '').isEmpty ? '' : '$itemImageBaseUrl/${item.image}';
+    final bool unitEnabled = splashController.configModel?.moduleConfig?.module?.unit ?? false;
+    final String itemName = item.name ?? 'item'.tr;
+    final double itemRating = item.avgRating ?? 0.0;
+    final int itemRatingCount = item.ratingCount ?? 0;
+    final double? discount = item.storeDiscount == 0 ? item.discount : item.storeDiscount;
+    final String? discountType = item.storeDiscount == 0 ? item.discountType : 'percent';
     return OnHover(
       isItem: true,
       child: Container(
@@ -46,8 +53,7 @@ class ItemThatYouLoveCard extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                     child: CustomImage(
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                          '/${item.image}',
+                      image: itemImage,
                       fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                     ),
                   ),
@@ -78,7 +84,7 @@ class ItemThatYouLoveCard extends StatelessWidget {
                           color: Theme.of(context).primaryColor,
                           boxShadow: [BoxShadow(color: Theme.of(context).primaryColor.withOpacity(0.1), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1))],
                         ),
-                        child: Text("add".tr, style: robotoBold.copyWith(color: Theme.of(context).cardColor)),
+                        child: Text('add'.tr, style: robotoBold.copyWith(color: Theme.of(context).cardColor)),
                       ),
                     ),
                   ),
@@ -93,34 +99,34 @@ class ItemThatYouLoveCard extends StatelessWidget {
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
 
-                  Text(item.name ?? '', style: robotoBold),
+                  Text(itemName, style: robotoBold),
 
                   Row(mainAxisAlignment: MainAxisAlignment.center, children: [
 
                     Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                    Text(item.avgRating!.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                    Text(itemRating.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                     const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                    Text("(${item.ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor)),
+                    Text('($itemRatingCount)', style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor)),
                   ]),
 
-                  (Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && item.unitType != null) ? Text(
+                  (unitEnabled && item.unitType != null) ? Text(
                     item.unitType ?? '',
                     style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeExtraSmall),
                   ) : const SizedBox(),
 
                   Wrap(alignment: WrapAlignment.center, crossAxisAlignment: WrapCrossAlignment.center, children: [
 
-                    item.discount != null && item.discount! > 0 ? Text(
+                    (item.discount ?? 0) > 0 ? Text(
                       PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(item)),
                       style: robotoMedium.copyWith(
                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                         decoration: TextDecoration.lineThrough,
                       ), textDirection: TextDirection.ltr,
                     ) : const SizedBox(),
-                    SizedBox(width: item.discount != null && item.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                    SizedBox(width: (item.discount ?? 0) > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
                     Text(
                       PriceConverter.convertPrice(

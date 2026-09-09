@@ -43,17 +43,14 @@ class HomeScreen extends StatefulWidget {
     Get.find<LocationController>().syncZoneData();
     Get.find<FlashSaleController>().setEmptyFlashSale(fromModule: fromModule);
     if (Get.find<SplashController>().module != null &&
-        !Get.find<SplashController>()
-            .configModel!
-            .moduleConfig!
-            .module!
-            .isParcel!) {
+        !(Get.find<SplashController>()
+            .configModel?.moduleConfig?.module?.isParcel ?? false)) {
       Get.find<BannerController>().getBannerList(reload);
-      if (Get.find<SplashController>().module!.moduleType.toString() ==
+      if (Get.find<SplashController>().module?.moduleType?.toString() ==
           AppConstants.grocery) {
         Get.find<FlashSaleController>().getFlashSale(reload, false);
       }
-      if (Get.find<SplashController>().module!.moduleType.toString() ==
+      if (Get.find<SplashController>().module?.moduleType?.toString() ==
           AppConstants.ecommerce) {
         Get.find<ItemController>().getFeaturedCategoriesItemList(false, false);
         Get.find<FlashSaleController>().getFlashSale(reload, false);
@@ -80,7 +77,7 @@ class HomeScreen extends StatefulWidget {
     }
     Get.find<SplashController>().getModules();
     if (Get.find<SplashController>().module == null &&
-        Get.find<SplashController>().configModel!.module == null) {
+        Get.find<SplashController>().configModel?.module == null) {
       Get.find<BannerController>().getFeaturedBanner();
       Get.find<StoreController>().getFeaturedStoreList();
       if (AuthHelper.isLoggedIn()) {
@@ -101,9 +98,9 @@ class HomeScreen extends StatefulWidget {
       Get.find<ItemController>().getBasicMedicine(reload, false);
       Get.find<StoreController>().getFeaturedStoreList();
       await Get.find<ItemController>().getCommonConditions(false);
-      if (Get.find<ItemController>().commonConditions!.isNotEmpty) {
+      if (Get.find<ItemController>().commonConditions != null && Get.find<ItemController>().commonConditions!.isNotEmpty) {
         Get.find<ItemController>().getConditionsWiseItem(
-            Get.find<ItemController>().commonConditions![0].id!, false);
+            Get.find<ItemController>().commonConditions![0].id ?? 0, false);
       }
     }
   }
@@ -139,17 +136,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return GetBuilder<SplashController>(builder: (splashController) {
       bool showMobileModule = !ResponsiveHelper.isDesktop(context) &&
           splashController.module == null &&
-          splashController.configModel!.module == null;
+          splashController.configModel?.module == null;
       bool isParcel = splashController.module != null &&
-          splashController.configModel!.moduleConfig!.module!.isParcel!;
+          (splashController.configModel?.moduleConfig?.module?.isParcel ?? false);
       bool isPharmacy = splashController.module != null &&
-          splashController.module!.moduleType.toString() ==
+          splashController.module?.moduleType?.toString() ==
               AppConstants.pharmacy;
       bool isShop = splashController.module != null &&
-          splashController.module!.moduleType.toString() ==
+          splashController.module?.moduleType?.toString() ==
               AppConstants.ecommerce;
       bool isGrocery = splashController.module != null &&
-          splashController.module!.moduleType.toString() ==
+          splashController.module?.moduleType?.toString() ==
               AppConstants.grocery;
 
       return Scaffold(

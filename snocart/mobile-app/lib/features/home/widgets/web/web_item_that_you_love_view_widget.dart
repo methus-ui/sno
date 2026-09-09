@@ -26,6 +26,17 @@ class WebItemThatYouLoveViewWidget extends StatefulWidget {
 class _WebItemThatYouLoveViewWidgetState extends State<WebItemThatYouLoveViewWidget> {
   final CarouselController carouselController = CarouselController();
 
+  String _itemName(int index, List<Item> items) => items[index].name ?? 'item'.tr;
+  String _itemImageUrl(int index, List<Item> items) {
+    final baseUrl = Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl ?? '';
+    final image = items[index].image ?? '';
+    return image.isEmpty ? '' : '$baseUrl/$image';
+  }
+
+  double _ratingValue(int index, List<Item> items) => items[index].avgRating ?? 0.0;
+  int _ratingCount(int index, List<Item> items) => items[index].ratingCount ?? 0;
+  double _discountValue(int index, List<Item> items) => items[index].discount ?? 0;
+
   @override
   Widget build(BuildContext context) {
     bool isShop = Get.find<SplashController>().module != null && Get.find<SplashController>().module!.moduleType.toString() == AppConstants.ecommerce;
@@ -52,35 +63,39 @@ class _WebItemThatYouLoveViewWidgetState extends State<WebItemThatYouLoveViewWid
                 onPageChanged: (index, reason) {},
               ),
               itemBuilder: (BuildContext context, int index, int realIndex) {
+                final item = recommendItems[index];
                 return Padding(
                   padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault),
-                  child: ItemThatYouLoveCard(item: recommendItems[index]),
+                  child: ItemThatYouLoveCard(item: item),
                 );
               },
             ) : SizedBox(
               height: 285,
               child: ListView.builder(
-                //controller: scrollController,
                 scrollDirection: Axis.horizontal,
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
                 itemCount: recommendItems.length,
                 itemBuilder: (context, index) {
+                  final item = recommendItems[index];
+                  final itemName = _itemName(index, recommendItems);
+                  final imageUrl = _itemImageUrl(index, recommendItems);
+                  final rating = _ratingValue(index, recommendItems);
+                  final ratingCount = _ratingCount(index, recommendItems);
+                  final discount = _discountValue(index, recommendItems);
                   return Padding(
                     padding: EdgeInsets.only(left: index == 0 ? 0 : Dimensions.paddingSizeDefault),
                     child: OnHover(
                       isItem: true,
                       child: InkWell(
-                        hoverColor: Colors.transparent,
-                        onTap: () =>  Get.find<ItemController>().navigateToItemPage(recommendItems[index], context),
+                        onTap: () => Get.find<ItemController>().navigateToItemPage(item, context),
                         child: Container(
                           width: 210, height: 285,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                            color: Theme.of(context).colorScheme.error,
+                            color: Theme.of(context).cardColor,
                           ),
                           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
                             Expanded(
                               child: Stack(children: [
                                 Padding(
@@ -88,8 +103,7 @@ class _WebItemThatYouLoveViewWidgetState extends State<WebItemThatYouLoveViewWid
                                   child: ClipRRect(
                                     borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
                                     child: CustomImage(
-                                      image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                                          '/${recommendItems[index].image}',
+                                      image: imageUrl,
                                       fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                                     ),
                                   ),
@@ -97,12 +111,12 @@ class _WebItemThatYouLoveViewWidgetState extends State<WebItemThatYouLoveViewWid
 
                                 AddFavouriteView(
                                   top: 10, right: 10,
-                                  item: Item(id: recommendItems[index].id),
+                                  item: Item(id: item.id),
                                 ),
 
                                 DiscountTag(
-                                  discount: Get.find<ItemController>().getDiscount(recommendItems[index]),
-                                  discountType: Get.find<ItemController>().getDiscountType(recommendItems[index]),
+                                  discount: Get.find<ItemController>().getDiscount(item),
+                                  discountType: Get.find<ItemController>().getDiscountType(item),
                                 ),
 
                                 Positioned(
@@ -120,44 +134,41 @@ class _WebItemThatYouLoveViewWidgetState extends State<WebItemThatYouLoveViewWid
                                             boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1.2))],
                                           ),
                                           child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                            Text(recommendItems[index].name!, style: robotoBold, maxLines: 1, overflow: TextOverflow.ellipsis),
+                                            Text(itemName, style: robotoBold, maxLines: 1, overflow: TextOverflow.ellipsis),
 
                                             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                                               Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
                                               const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                                              Text(recommendItems[index].avgRating!.toStringAsFixed(1), style: robotoRegular),
+                                              Text(rating.toStringAsFixed(1), style: robotoRegular),
                                               const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                                              Text("(${recommendItems[index].ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                              Text("($ratingCount)", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
                                             ]),
 
-
                                             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                              recommendItems[index].discount! > 0  ? Flexible(child: Text(
+                                              discount > 0 ? Flexible(child: Text(
                                                   PriceConverter.convertPrice(
-                                                    Get.find<ItemController>().getStartingPrice(recommendItems[index]),
+                                                    Get.find<ItemController>().getStartingPrice(item),
                                                   ),
                                                   style: robotoRegular.copyWith(
                                                     fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough,
                                                   ))) : const SizedBox(),
-                                              SizedBox(width: recommendItems[index].discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                                              SizedBox(width: discount > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
                                               Text(
                                                 PriceConverter.convertPrice(
-                                                  Get.find<ItemController>().getStartingPrice(recommendItems[index]),
-                                                  discount: recommendItems[index].discount,
-                                                  discountType: recommendItems[index].discountType,
+                                                  Get.find<ItemController>().getStartingPrice(item),
+                                                  discount: item.discount,
+                                                  discountType: item.discountType,
                                                 ),
                                                 style: robotoMedium, textDirection: TextDirection.ltr,
                                               ),
                                             ]),
-                                          ],
-                                          ),
+                                          ]),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-
                               ]),
                             ),
                           ]),
@@ -198,11 +209,21 @@ class WebItemThatYouLoveForShop extends StatefulWidget {
 }
 
 class _WebItemThatYouLoveForShopState extends State<WebItemThatYouLoveForShop> {
-
   ScrollController scrollController = ScrollController();
   bool showBackButton = false;
   bool showForwardButton = false;
   bool isFirstTime = true;
+
+  String _itemName(int index, List<Item> items) => items[index].name ?? 'item'.tr;
+  String _itemImageUrl(int index, List<Item> items) {
+    final baseUrl = Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl ?? '';
+    final image = items[index].image ?? '';
+    return image.isEmpty ? '' : '$baseUrl/$image';
+  }
+
+  double _ratingValue(int index, List<Item> items) => items[index].avgRating ?? 0.0;
+  int _ratingCount(int index, List<Item> items) => items[index].ratingCount ?? 0;
+  double _discountValue(int index, List<Item> items) => items[index].discount ?? 0;
 
   @override
   void initState() {
@@ -237,152 +258,151 @@ class _WebItemThatYouLoveForShopState extends State<WebItemThatYouLoveForShop> {
     return GetBuilder<ItemController>(builder: (itemController) {
       List<Item>? recommendItems = itemController.recommendedItemList;
 
-      if(recommendItems != null && recommendItems.length > 5 && isFirstTime){
+      if (recommendItems != null && recommendItems.length > 5 && isFirstTime) {
         showForwardButton = true;
         isFirstTime = false;
       }
 
-      return recommendItems != null ? recommendItems.isNotEmpty ? Stack(children: [
-        Column(children: [
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
-            child: Text('item_that_you_love'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
-          ),
-
-          Container(
-            color: Theme.of(context).cardColor,
-            height: 285, width: Get.width,
-            child: ListView.builder(
-              controller: scrollController,
-              scrollDirection: Axis.horizontal,
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
-              itemCount: recommendItems.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(left: index == 0 ? 0 : Dimensions.paddingSizeDefault),
-                  child: OnHover(
-                    isItem: true,
-                    child: InkWell(
-                      onTap: () =>  Get.find<ItemController>().navigateToItemPage(recommendItems[index], context),
-                      child: Container(
-                        width: 210, height: 285,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                          color: Theme.of(context).cardColor,
-                        ),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-                          Expanded(
-                            child: Stack(children: [
-                              Padding(
-                                padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
-                                  child: CustomImage(
-                                    image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                                        '/${recommendItems[index].image}',
-                                    fit: BoxFit.cover, width: double.infinity, height: double.infinity,
-                                  ),
-                                ),
+      return recommendItems != null ? recommendItems.isNotEmpty
+          ? Stack(children: [
+              Column(children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
+                  child: Text('item_that_you_love'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
+                ),
+                Container(
+                  color: Theme.of(context).cardColor,
+                  height: 285, width: Get.width,
+                  child: ListView.builder(
+                    controller: scrollController,
+                    scrollDirection: Axis.horizontal,
+                    physics: const BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
+                    itemCount: recommendItems.length,
+                    itemBuilder: (context, index) {
+                      final item = recommendItems[index];
+                      final itemName = _itemName(index, recommendItems);
+                      final imageUrl = _itemImageUrl(index, recommendItems);
+                      final rating = _ratingValue(index, recommendItems);
+                      final ratingCount = _ratingCount(index, recommendItems);
+                      final discount = _discountValue(index, recommendItems);
+                      return Padding(
+                        padding: EdgeInsets.only(left: index == 0 ? 0 : Dimensions.paddingSizeDefault),
+                        child: OnHover(
+                          isItem: true,
+                          child: InkWell(
+                            onTap: () => Get.find<ItemController>().navigateToItemPage(item, context),
+                            child: Container(
+                              width: 210, height: 285,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                                color: Theme.of(context).cardColor,
                               ),
-
-                              AddFavouriteView(
-                                top: 10, right: 10,
-                                item: Item(id: recommendItems[index].id),
-                              ),
-
-                              DiscountTag(
-                                discount: Get.find<ItemController>().getDiscount(recommendItems[index]),
-                                discountType: Get.find<ItemController>().getDiscountType(recommendItems[index]),
-                              ),
-
-                              Positioned(
-                                bottom: 0, left: 0, right: 0,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-                                  child: Stack(
-                                    clipBehavior: Clip.none,
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                                        decoration: BoxDecoration(
-                                          borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
-                                          color: Theme.of(context).cardColor,
-                                          boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1.2))],
-                                        ),
-                                        child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                          Text(recommendItems[index].name!, style: robotoBold, maxLines: 1, overflow: TextOverflow.ellipsis),
-
-                                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                            Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
-                                            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                                            Text(recommendItems[index].avgRating!.toStringAsFixed(1), style: robotoRegular),
-                                            const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                                            Text("(${recommendItems[index].ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
-                                          ]),
-
-
-                                          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                            recommendItems[index].discount! > 0  ? Flexible(child: Text(
-                                                PriceConverter.convertPrice(
-                                                  Get.find<ItemController>().getStartingPrice(recommendItems[index]),
-                                                ),
-                                                style: robotoRegular.copyWith(
-                                                  fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough,
-                                                ))) : const SizedBox(),
-                                            SizedBox(width: recommendItems[index].discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
-
-                                            Text(
-                                              PriceConverter.convertPrice(
-                                                Get.find<ItemController>().getStartingPrice(recommendItems[index]),
-                                                discount: recommendItems[index].discount,
-                                                discountType: recommendItems[index].discountType,
-                                              ),
-                                              style: robotoMedium, textDirection: TextDirection.ltr,
-                                            ),
-                                          ]),
-                                        ],
+                              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                Expanded(
+                                  child: Stack(children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
+                                        child: CustomImage(
+                                          image: imageUrl,
+                                          fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+
+                                    AddFavouriteView(
+                                      top: 10, right: 10,
+                                      item: Item(id: item.id),
+                                    ),
+
+                                    DiscountTag(
+                                      discount: Get.find<ItemController>().getDiscount(item),
+                                      discountType: Get.find<ItemController>().getDiscountType(item),
+                                    ),
+
+                                    Positioned(
+                                      bottom: 0, left: 0, right: 0,
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
+                                        child: Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            Container(
+                                              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+                                              decoration: BoxDecoration(
+                                                borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
+                                                color: Theme.of(context).cardColor,
+                                                boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.2), spreadRadius: 1, blurRadius: 5, offset: const Offset(0, 1.2))],
+                                              ),
+                                              child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                                                Text(itemName, style: robotoBold, maxLines: 1, overflow: TextOverflow.ellipsis),
+
+                                                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                                  Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
+                                                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                                                  Text(rating.toStringAsFixed(1), style: robotoRegular),
+                                                  const SizedBox(width: Dimensions.paddingSizeExtraSmall),
+                                                  Text("($ratingCount)", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
+                                                ]),
+
+                                                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                                                  discount > 0 ? Flexible(child: Text(
+                                                      PriceConverter.convertPrice(
+                                                        Get.find<ItemController>().getStartingPrice(item),
+                                                      ),
+                                                      style: robotoRegular.copyWith(
+                                                        fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor, decoration: TextDecoration.lineThrough,
+                                                      ))) : const SizedBox(),
+                                                  SizedBox(width: discount > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+
+                                                  Text(
+                                                    PriceConverter.convertPrice(
+                                                      Get.find<ItemController>().getStartingPrice(item),
+                                                      discount: item.discount,
+                                                      discountType: item.discountType,
+                                                    ),
+                                                    style: robotoMedium, textDirection: TextDirection.ltr,
+                                                  ),
+                                                ]),
+                                              ]),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
                                 ),
-                              ),
-
-                            ]),
+                              ]),
+                            ),
                           ),
-                        ]),
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ),
-        ]),
+                ),
+              ]),
 
-        if(showBackButton)
-          Positioned(
-            top: 200, left: 0,
-            child: ArrowIconButton(
-              isRight: false,
-              onTap: () => scrollController.animateTo(scrollController.offset - Dimensions.webMaxWidth,
-                  duration: const Duration(milliseconds: 500), curve: Curves.easeInOut),
-            ),
-          ),
+              if (showBackButton)
+                Positioned(
+                  top: 200, left: 0,
+                  child: ArrowIconButton(
+                    isRight: false,
+                    onTap: () => scrollController.animateTo(scrollController.offset - Dimensions.webMaxWidth,
+                        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut),
+                  ),
+                ),
 
-        if(showForwardButton)
-          Positioned(
-            top: 200, right: 0,
-            child: ArrowIconButton(
-              onTap: () => scrollController.animateTo(scrollController.offset + Dimensions.webMaxWidth,
-                  duration: const Duration(milliseconds: 500), curve: Curves.easeInOut),
-            ),
-          ),
-
-      ]) : const SizedBox() : const WebItemThatYouLoveForShopShimmer();
+              if (showForwardButton)
+                Positioned(
+                  top: 200, right: 0,
+                  child: ArrowIconButton(
+                    onTap: () => scrollController.animateTo(scrollController.offset + Dimensions.webMaxWidth,
+                        duration: const Duration(milliseconds: 500), curve: Curves.easeInOut),
+                  ),
+                ),
+            ]) : const SizedBox() : const WebItemThatYouLoveForShopShimmer();
     });
   }
 }
@@ -394,12 +414,10 @@ class WebItemThatYouLoveForShopShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(children: [
       Column(children: [
-
         Padding(
           padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
           child: Text('item_that_you_love'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
         ),
-
         Shimmer(
           enabled: true,
           duration: const Duration(seconds: 2),
@@ -418,66 +436,8 @@ class WebItemThatYouLoveForShopShimmer extends StatelessWidget {
                     width: 210, height: 285,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
-                      color: Colors.grey[300],
+                      color: Theme.of(context).cardColor,
                     ),
-                    child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-                      Expanded(
-                        child: Stack(children: [
-                          Padding(
-                            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
-                              child: Container(
-                                color: Colors.grey[300],
-                                width: 210, height: 285,
-                              ),
-                            ),
-                          ),
-
-                          Positioned(
-                            bottom: 0, left: 0, right: 0,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeDefault),
-                              child: Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                                    decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
-                                      color: Theme.of(context).cardColor,
-                                    ),
-                                    child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                                      Container(
-                                        width: 100, height: 10,
-                                        color: Colors.grey[300],
-                                      ),
-
-                                      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                                        Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
-                                        const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                                        Text('0.0', style: robotoRegular),
-                                        const SizedBox(width: Dimensions.paddingSizeExtraSmall),
-                                        Text("(0)", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
-                                      ]),
-
-                                      Container(
-                                        width: 100, height: 10,
-                                        color: Colors.grey[300],
-                                      ),
-
-                                    ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-
-                        ]),
-                      ),
-                    ]),
                   ),
                 );
               },
@@ -485,11 +445,9 @@ class WebItemThatYouLoveForShopShimmer extends StatelessWidget {
           ),
         ),
       ]),
-
     ]);
   }
 }
-
 
 class WebItemThatYouLoveShimmerView extends StatelessWidget {
   final ItemController itemController;
@@ -497,98 +455,6 @@ class WebItemThatYouLoveShimmerView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer(
-      duration: const Duration(seconds: 2),
-      enabled: true,
-      child: Column(children: [
-
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeDefault),
-          child: Text('item_that_you_love'.tr, style: robotoBold.copyWith(fontSize: Dimensions.fontSizeLarge)),
-        ),
-
-        CarouselSlider.builder(
-          itemCount: 5,
-          options: CarouselOptions(
-            height: 400,
-            enlargeCenterPage: true,
-            disableCenter: true,
-            viewportFraction: .25,
-            enlargeFactor: 0.2,
-          ),
-          itemBuilder: (BuildContext context, int index, int realIndex) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: Dimensions.paddingSizeDefault),
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                  color: Colors.grey[300],
-                ),
-                child: Column(children: [
-
-                  Expanded(
-                    flex: 7,
-                    child: Stack(clipBehavior: Clip.none, children: [
-
-                      Padding(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-                          child: Container(
-                            height: double.infinity, width: double.infinity,
-                            color: Theme.of(context).cardColor,
-                          ),
-                        ),
-                      ),
-
-                      Positioned(
-                        bottom: -10, left: 0, right: 0,
-                        child: Center(
-                          child: Container(alignment: Alignment.center,
-                            width: 65, height: 30,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(112),
-                              color: Theme.of(context).primaryColor.withOpacity(0.5),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ]),
-                  ),
-                  const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                  Expanded(
-                    flex: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                      child: Column(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-
-                        Container(
-                          height: 20, width: 100,
-                          color: Theme.of(context).cardColor,
-                        ),
-                        const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                        Container(
-                          height: 20, width: 200,
-                          color: Theme.of(context).cardColor,
-                        ),
-                        const SizedBox(height: Dimensions.paddingSizeSmall),
-
-                        Container(
-                          height: 20, width: 100,
-                          color: Theme.of(context).cardColor,
-                        ),
-
-                      ]),
-                    ),
-                  ),
-                ]),
-              ),
-            );
-          },
-        ),
-      ]),
-    );
+    return const SizedBox();
   }
 }
