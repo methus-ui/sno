@@ -23,7 +23,7 @@ class ItemImageViewWidget extends StatelessWidget {
     return GetBuilder<ItemController>(
       builder: (itemController) {
         String? baseUrl = item!.availableDateStarts == null ? Get.find<SplashController>().
-            configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl;
+            configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl;
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [

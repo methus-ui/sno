@@ -23,7 +23,7 @@ class ImageViewerScreen extends StatelessWidget {
       appBar: CustomAppBar(title: 'product_images'.tr),
       body: GetBuilder<ItemController>(builder: (itemController) {
         String? baseUrl = item.availableDateStarts == null ? Get.find<SplashController>().
-        configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl;
+        configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl;
         return Column(children: [
 
           Expanded(child: Stack(children: [

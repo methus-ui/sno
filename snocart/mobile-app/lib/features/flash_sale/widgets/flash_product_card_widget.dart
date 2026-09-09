@@ -13,6 +13,7 @@ import 'package:sixam_mart/common/widgets/cart_count_view.dart';
 import 'package:sixam_mart/common/widgets/custom_image.dart';
 import 'package:sixam_mart/common/widgets/discount_tag.dart';
 import 'package:sixam_mart/common/widgets/organic_tag.dart';
+import 'package:sixam_mart/common/helpers/image_utils.dart';
 
 class FlashProductCardWidget extends StatelessWidget {
   final Products product;
@@ -43,7 +44,7 @@ class FlashProductCardWidget extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 child: CustomImage(
-                  image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl!}/${product.item!.image}',
+                  image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, product.item?.image),
                   fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                 ),
               ),

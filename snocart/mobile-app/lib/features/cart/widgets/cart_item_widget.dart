@@ -83,7 +83,7 @@ class CartItemWidget extends StatelessWidget {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                         child: CustomImage(
-                          image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/${cart.item!.image}',
+                          image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, cart.item?.image),
                           height: ResponsiveHelper.isDesktop(context) ? 90 : 65, width: ResponsiveHelper.isDesktop(context) ? 90 : 70, fit: BoxFit.cover,
                         ),
                       ),

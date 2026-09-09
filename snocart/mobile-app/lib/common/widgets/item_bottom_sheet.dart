@@ -176,7 +176,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 child: CustomImage(
                                   image: '${widget.isCampaign ? Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl
-                                      : Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/${widget.item!.image}',
+                                      : buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, widget.item?.image),
                                   width: ResponsiveHelper.isMobile(context) ? 100 : 140,
                                   height: ResponsiveHelper.isMobile(context) ? 100 : 140,
                                   fit: BoxFit.cover,

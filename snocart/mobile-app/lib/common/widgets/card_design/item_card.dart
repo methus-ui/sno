@@ -15,6 +15,7 @@ import 'package:sixam_mart/common/widgets/discount_tag.dart';
 import 'package:sixam_mart/common/widgets/hover/on_hover.dart';
 import 'package:sixam_mart/common/widgets/not_available_widget.dart';
 import 'package:sixam_mart/common/widgets/organic_tag.dart';
+import 'package:sixam_mart/common/helpers/image_utils.dart';
 
 class ItemCard extends StatelessWidget {
   final Item item;
@@ -57,8 +58,7 @@ class ItemCard extends StatelessWidget {
                       ),
                       child: CustomImage(
                         placeholder: Images.placeholder,
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                            '/${item.image}',
+                        image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, item.image),
                         fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                       ),
                     ),

@@ -13,6 +13,7 @@ import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/common/widgets/custom_image.dart';
 import 'package:sixam_mart/features/store/screens/store_screen.dart';
+import 'package:sixam_mart/common/helpers/image_utils.dart';
 
 class VisitAgainCard extends StatelessWidget {
   final Store store;
@@ -88,9 +89,8 @@ class VisitAgainCard extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular((isPharmacy || isFood) ? 100 : Dimensions.radiusSmall),
                           child: CustomImage(
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
-                              '/${store.items![index].image}',
-                              fit: BoxFit.cover, height: 25, width: 25,
+                            image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, store.items![index].image),
+                            fit: BoxFit.cover, height: 25, width: 25,
                           ),
                         ),
 
@@ -125,11 +125,10 @@ class VisitAgainCard extends StatelessWidget {
             color: Theme.of(context).cardColor,
             border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.2), width: 2),
           ),
-          child: ClipRRect(
+            child: ClipRRect(
             borderRadius: BorderRadius.circular(fromFood ? 100 : Dimensions.radiusDefault),
             child: CustomImage(
-              image: '${Get.find<SplashController>().configModel!.baseUrls!.storeCoverPhotoUrl}'
-                  '/${store.coverPhoto}',
+              image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.storeCoverPhotoUrl, store.coverPhoto),
               fit: BoxFit.cover, height: 54, width: 54,
             ),
           ),
