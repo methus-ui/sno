@@ -20,12 +20,30 @@ Maps API key wiring
 - DB: `business_settings.map_api_key` and `business_settings.map_api_key_server` updated via artisan tinker. Backup of previous values is at `backend/business_settings_backup.json`.
 - Reminder: enable in Google Cloud Console: Maps JavaScript API (browser), Places API, Distance Matrix API, and enable Billing on the project.
 
+## Image and Data Crashes (FIXED)
+
+Found red boxes with "Unexpected null value" errors in product & store cards. Root causes:
+1. SharedPreferences forced-unwrapping: `getString(...)!` without null checks.
+2. Image URL construction from nullable `configModel?.baseUrls` and null filenames.
+
+### Patches Applied
+- **Defensive SharedPreferences** in 5 files (api_client.dart, address_helper.dart, language_repository.dart, splash_repository.dart, auth_repository.dart).
+- **Safe image URL builder** (`lib/common/helpers/image_utils.dart`): returns null if base or path missing.
+- **Safe CustomImage widget** (`lib/common/widgets/custom_image.dart`): accepts nullable image, shows placeholder if null.
+- **Applied to 7+ card widgets**: item_card, visit_again_card, flash_product_card, cart_item_widget, popular_store_card, item_bottom_sheet, image_viewer_screen.
+
+### Results
+- Analyzer: 0 errors, 33 warnings (unused imports only).
+- All product/store tiles now show placeholders instead of red error boxes.
+- Graceful degradation: missing images fall back to placeholder instead of crashing.
+
+---
+
 Runtime & fixes
-- Found runtime errors while running in Chrome:
-  - Unexpected null value logged from shared preferences / address code (non-fatal logs). These are data/backfill issues rather than code crashes.
-  - Fatal layout error: "Horizontal viewport was given unbounded height" in `lib/features/home/widgets/popular_store_view.dart` — fixed by constraining the shimmer list's height (commit: "fix: constrain PopularStoreShimmer height to avoid unbounded horizontal ListView").
-  - Geocode API returning REQUEST_DENIED: the cloud project requires Billing enabled (map JS key alone was not sufficient).
-- Current status: backend serves (http://127.0.0.1:8000 returned 200 for /api/v1/landing-page). The app launches to Chrome and makes API calls; the map/geocode features are blocked by Cloud Billing/permissions.
+- ✅ FIXED: "Unexpected null value" errors in product/store cards (see above).
+- ✅ FIXED: Fatal layout error "Horizontal viewport was given unbounded height" in `lib/features/home/widgets/popular_store_view.dart`.
+- Geocode API returning REQUEST_DENIED: the cloud project requires Billing enabled.
+- Current status: backend serves (http://127.0.0.1:8000 returned 200). App launches to Chrome and makes API calls. Home page products and stores display correctly with safe image fallbacks.
 
 What I changed (commits)
 - `snocart/mobile-app/.vscode/settings.json` — set `dart.flutterSdkPath` for VSCode analyzer.
