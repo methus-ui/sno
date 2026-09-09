@@ -28,16 +28,18 @@ class ApiClient extends GetxService {
     }
     AddressModel? addressModel;
     try {
-      addressModel = AddressModel.fromJson(
-          jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+      String? addrJson = sharedPreferences.getString(AppConstants.userAddress);
+      if (addrJson != null) {
+        addressModel = AddressModel.fromJson(jsonDecode(addrJson));
+      }
     } catch (_) {}
     int? moduleID;
-    if (GetPlatform.isWeb &&
-        sharedPreferences.containsKey(AppConstants.moduleId)) {
+    if (GetPlatform.isWeb && sharedPreferences.containsKey(AppConstants.moduleId)) {
       try {
-        moduleID = ModuleModel.fromJson(
-                jsonDecode(sharedPreferences.getString(AppConstants.moduleId)!))
-            .id;
+        String? moduleJson = sharedPreferences.getString(AppConstants.moduleId);
+        if (moduleJson != null) {
+          moduleID = ModuleModel.fromJson(jsonDecode(moduleJson)).id;
+        }
       } catch (_) {}
     }
     updateHeader(

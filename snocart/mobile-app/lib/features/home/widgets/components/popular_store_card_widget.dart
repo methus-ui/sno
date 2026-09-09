@@ -35,8 +35,9 @@ class PopularStoreCard extends StatelessWidget {
           child: Stack(
             children: [
               CustomImage(
-                image: '${Get.find<SplashController>().configModel!.baseUrls!.storeCoverPhotoUrl}'
-                    '/${store.coverPhoto}',
+                image: ((Get.find<SplashController>().configModel?.baseUrls?.storeCoverPhotoUrl ?? '').isNotEmpty && (store.coverPhoto ?? '').isNotEmpty)
+                    ? '${Get.find<SplashController>().configModel?.baseUrls?.storeCoverPhotoUrl}/${store.coverPhoto}'
+                    : null,
                 fit: BoxFit.cover, width: double.infinity, height: 170,
               ),
 
@@ -68,8 +69,9 @@ class PopularStoreCard extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
                               child: CustomImage(
-                                image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}'
-                                    '/${store.logo}',
+                                image: ((Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl ?? '').isNotEmpty && (store.logo ?? '').isNotEmpty)
+                                    ? '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}/${store.logo}'
+                                    : null,
                                 height: 40, width: 40,
                               ),
                             ),

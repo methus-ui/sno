@@ -259,7 +259,10 @@ class AuthRepository implements AuthRepositoryInterface{
         updateToken(notificationDeviceToken: '@');
         FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
         if(isLoggedIn()) {
-          FirebaseMessaging.instance.unsubscribeFromTopic('zone_${AddressHelper.getUserAddressFromSharedPref()!.zoneId}_customer');
+          final addr = AddressHelper.getUserAddressFromSharedPref();
+          if (addr != null) {
+            FirebaseMessaging.instance.unsubscribeFromTopic('zone_${addr.zoneId}_customer');
+          }
         }
       }
     }

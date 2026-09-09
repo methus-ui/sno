@@ -63,7 +63,10 @@ class SplashRepository implements SplashRepositoryInterface {
     ModuleModel? module;
     if(sharedPreferences.containsKey(AppConstants.moduleId)) {
       try {
-        module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.moduleId)!));
+        String? moduleJson = sharedPreferences.getString(AppConstants.moduleId);
+        if (moduleJson != null) {
+          module = ModuleModel.fromJson(jsonDecode(moduleJson));
+        }
       }catch(e) {
         debugPrint('Did not get shared Preferences module. Note: $e');
       }
@@ -85,7 +88,10 @@ class SplashRepository implements SplashRepositoryInterface {
   Future<void> setStoreCategory(int storeCategoryID) async {
     AddressModel? addressModel;
     try {
-      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+      String? addrJson = sharedPreferences.getString(AppConstants.userAddress);
+      if (addrJson != null) {
+        addressModel = AddressModel.fromJson(jsonDecode(addrJson));
+      }
     }catch(e) {
       debugPrint('Did not get shared Preferences address . Note: $e');
     }
@@ -111,7 +117,10 @@ class SplashRepository implements SplashRepositoryInterface {
   Future<void> setModule(ModuleModel? module) async {
     AddressModel? addressModel;
     try {
-      addressModel = AddressModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.userAddress)!));
+      String? addrJson = sharedPreferences.getString(AppConstants.userAddress);
+      if (addrJson != null) {
+        addressModel = AddressModel.fromJson(jsonDecode(addrJson));
+      }
     }catch(e) {
       debugPrint('Did not get shared Preferences address . Note: $e');
     }
@@ -141,7 +150,10 @@ class SplashRepository implements SplashRepositoryInterface {
     ModuleModel? module;
     if(sharedPreferences.containsKey(AppConstants.cacheModuleId)) {
       try {
-        module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.cacheModuleId)!));
+        String? moduleJson = sharedPreferences.getString(AppConstants.cacheModuleId);
+        if (moduleJson != null) {
+          module = ModuleModel.fromJson(jsonDecode(moduleJson));
+        }
       }catch(e) {
         debugPrint('Did not get shared Preferences cache module. Note: $e');
       }
@@ -154,7 +166,10 @@ class SplashRepository implements SplashRepositoryInterface {
     ModuleModel? module;
     if(sharedPreferences.containsKey(AppConstants.moduleId)) {
       try {
-        module = ModuleModel.fromJson(jsonDecode(sharedPreferences.getString(AppConstants.moduleId)!));
+        String? moduleJson = sharedPreferences.getString(AppConstants.moduleId);
+        if (moduleJson != null) {
+          module = ModuleModel.fromJson(jsonDecode(moduleJson));
+        }
       }catch(e) {
         debugPrint('Did not get shared Preferences module. Note: $e');
       }
@@ -176,7 +191,7 @@ class SplashRepository implements SplashRepositoryInterface {
 
   @override
   bool getSavedCookiesData() {
-    return sharedPreferences.getBool(AppConstants.acceptCookies)!;
+    return sharedPreferences.getBool(AppConstants.acceptCookies) ?? false;
   }
 
   @override
@@ -202,7 +217,7 @@ class SplashRepository implements SplashRepositoryInterface {
 
   @override
   bool getSuggestedLocationStatus() {
-    return sharedPreferences.getBool(AppConstants.suggestedLocation)!;
+    return sharedPreferences.getBool(AppConstants.suggestedLocation) ?? false;
   }
 
   @override
