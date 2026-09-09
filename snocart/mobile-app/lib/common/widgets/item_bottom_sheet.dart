@@ -24,6 +24,7 @@ import 'package:sixam_mart/common/widgets/rating_bar.dart';
 import 'package:sixam_mart/features/checkout/screens/checkout_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sixam_mart/common/helpers/image_utils.dart';
 
 import 'cart_snackbar.dart';
 
@@ -175,8 +176,10 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 child: CustomImage(
-                                  image: '${widget.isCampaign ? Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl
-                                      : buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, widget.item?.image),
+                                  image: buildImageUrl(
+                                    widget.isCampaign ? Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl : Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl,
+                                    widget.item?.image
+                                  ),
                                   width: ResponsiveHelper.isMobile(context) ? 100 : 140,
                                   height: ResponsiveHelper.isMobile(context) ? 100 : 140,
                                   fit: BoxFit.cover,
