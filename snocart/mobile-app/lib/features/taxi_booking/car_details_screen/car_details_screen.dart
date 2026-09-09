@@ -38,7 +38,7 @@ class CarDetailsScreen extends StatelessWidget {
                         child: CustomImage(
                             height: 200,
                             width: double.infinity,
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}')),
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}')),
                     const SizedBox(height: 170)
                   ],
                 ),

@@ -194,8 +194,8 @@ class DeliverymanRegistrationController extends GetxController implements GetxSe
       _zoneList = [];
       _zoneList!.addAll(zones);
       _setLocation(LatLng(
-        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
-        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
+        double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lat ?? '0'),
+        double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lng ?? '0'),
       ));
       await getModules(_zoneList![0].id);
     }

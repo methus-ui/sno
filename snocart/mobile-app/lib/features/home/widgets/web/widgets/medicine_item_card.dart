@@ -50,7 +50,7 @@ class MedicineItemCard extends StatelessWidget {
                   ),
                   child: CustomImage(
                     placeholder: Images.placeholder,
-                    image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
+                    image: '${Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl}'
                         '/${item.image}',
                     fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                   ),

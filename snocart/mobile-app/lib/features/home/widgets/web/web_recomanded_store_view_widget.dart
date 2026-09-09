@@ -63,7 +63,7 @@ class WebRecommendedStoreView extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}'
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}'
                             '/${storeController.recommendedStoreList![index].logo}',
                         fit: BoxFit.cover, height: 60, width: double.infinity,
                       ),

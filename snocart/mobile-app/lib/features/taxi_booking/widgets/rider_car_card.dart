@@ -37,7 +37,7 @@ class RiderCarCard extends StatelessWidget {
                 ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusSmall)),
                     child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}',
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}',
                       height: 130,width: Get.width),
                 ),
                 Padding(

@@ -47,7 +47,7 @@ class ItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool ltr = Get.find<LocalizationController>().isLtr;
-    BaseUrls? baseUrls = Get.find<SplashController>().configModel!.baseUrls;
+    BaseUrls? baseUrls = Get.find<SplashController>().configModel?.baseUrls;
     bool desktop = ResponsiveHelper.isDesktop(context);
     double? discount;
     String? discountType;
@@ -56,12 +56,16 @@ class ItemWidget extends StatelessWidget {
     if(isStore) {
       discount = store!.discount != null ? store!.discount!.discount : 0;
       discountType = store!.discount != null ? store!.discount!.discountType : 'percent';
-      isAvailable = store!.open == 1 && store!.active!;
+      isAvailable = store!.open == 1 && store!.active == true;
     }else {
       discount = (item!.storeDiscount == 0 || isCampaign) ? item!.discount : item!.storeDiscount;
       discountType = (item!.storeDiscount == 0 || isCampaign) ? item!.discountType : 'percent';
       isAvailable = DateConverter.isAvailable(item!.availableTimeStarts, item!.availableTimeEnds);
     }
+    final String itemImageBase = isCampaign ? (baseUrls?.campaignImageUrl ?? '') : isStore ? (baseUrls?.storeImageUrl ?? '')
+        : (baseUrls?.itemImageUrl ?? '');
+    final String itemImagePath = isStore ? (store?.logo ?? '') : (item?.image ?? '');
+    final String itemImageUrl = (itemImageBase.isEmpty || itemImagePath.isEmpty) ? '' : '$itemImageBase/$itemImagePath';
 
     return Stack(
       children: [
@@ -113,9 +117,7 @@ class ItemWidget extends StatelessWidget {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                       child: CustomImage(
-                        image: '${isCampaign ? baseUrls!.campaignImageUrl : isStore ? baseUrls!.storeImageUrl
-                            : baseUrls!.itemImageUrl}'
-                            '/${isStore ? store != null ? store!.logo : '' : item!.image}',
+                        image: itemImageUrl,
                         height: imageHeight ?? (desktop ? 120 : length == null ? 100 : 65), width: imageWidth ?? (desktop ? 120 : 80), fit: BoxFit.cover,
                       ),
                     ),
@@ -136,13 +138,13 @@ class ItemWidget extends StatelessWidget {
 
                       Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
                         Text(
-                          isStore ? store!.name! : item!.name!,
+                          isStore ? (store?.name ?? '') : (item?.name ?? ''),
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                           maxLines: 1, overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                        (!isStore && Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg! && Get.find<SplashController>().configModel!.toggleVegNonVeg!)
+                        (!isStore && Get.find<SplashController>().configModel?.moduleConfig?.module?.vegNonVeg == true && Get.find<SplashController>().configModel?.toggleVegNonVeg == true)
                             ? Image.asset(item != null && item!.veg == 0 ? Images.nonVegImage : Images.vegImage,
                             height: 10, width: 10, fit: BoxFit.contain) : const SizedBox(),
                       ]),
@@ -164,7 +166,7 @@ class ItemWidget extends StatelessWidget {
                       ) : const SizedBox(),
                       SizedBox(height: (!isStore && desktop) ? Dimensions.paddingSizeExtraSmall : 0),
 
-                      (Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && item != null && item!.unitType != null) ? Text(
+                      (Get.find<SplashController>().configModel?.moduleConfig?.module?.unit == true && item != null && item!.unitType != null) ? Text(
                         '(${ item!.unitType ?? ''})',
                         style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).hintColor),
                       ) : const SizedBox(),
@@ -177,9 +179,9 @@ class ItemWidget extends StatelessWidget {
                           PriceConverter.convertPrice(item!.price, discount: discount, discountType: discountType),
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall), textDirection: TextDirection.ltr,
                         ),
-                        SizedBox(width: discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                        SizedBox(width: (discount ?? 0) > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
-                        discount > 0 ? Text(
+                        (discount ?? 0) > 0 ? Text(
                           PriceConverter.convertPrice(item!.price),
                           style: robotoMedium.copyWith(
                             fontSize: Dimensions.fontSizeExtraSmall,

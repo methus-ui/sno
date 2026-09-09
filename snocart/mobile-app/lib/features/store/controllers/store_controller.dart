@@ -99,10 +99,15 @@ class StoreController extends GetxController implements GetxService {
   List<Store>? get recommendedStoreList => _recommendedStoreList;
 
   double getRestaurantDistance(LatLng storeLatLng){
-    double distance = 0;
-    distance = Geolocator.distanceBetween(storeLatLng.latitude, storeLatLng.longitude,
-        double.parse(AddressHelper.getUserAddressFromSharedPref()!.latitude!), double.parse(AddressHelper.getUserAddressFromSharedPref()!.longitude!)) / 1000;
-    return distance;
+    try {
+      final address = AddressHelper.getUserAddressFromSharedPref();
+      final double? lat = double.tryParse(address?.latitude ?? '');
+      final double? lng = double.tryParse(address?.longitude ?? '');
+      if (lat == null || lng == null) return 0;
+      return Geolocator.distanceBetween(storeLatLng.latitude, storeLatLng.longitude, lat, lng) / 1000;
+    } catch (_) {
+      return 0;
+    }
   }
 
   String filteringUrl(String slug){
@@ -313,14 +318,14 @@ class StoreController extends GetxController implements GetxService {
         if(!fromCart && slug.isEmpty){
           Get.find<CheckoutController>().getDistanceInKM(
             LatLng(
-              double.parse(AddressHelper.getUserAddressFromSharedPref()!.latitude!),
-              double.parse(AddressHelper.getUserAddressFromSharedPref()!.longitude!),
+              double.tryParse(AddressHelper.getUserAddressFromSharedPref()?.latitude ?? '') ?? 0,
+              double.tryParse(AddressHelper.getUserAddressFromSharedPref()?.longitude ?? '') ?? 0,
             ),
-            LatLng(double.parse(_store!.latitude!), double.parse(_store!.longitude!)),
+            LatLng(double.tryParse(_store?.latitude ?? '') ?? 0, double.tryParse(_store?.longitude ?? '') ?? 0),
           );
         }
         if(slug.isNotEmpty){
-          await Get.find<LocationController>().setStoreAddressToUserAddress(LatLng(double.parse(_store!.latitude!), double.parse(_store!.longitude!)));
+          await Get.find<LocationController>().setStoreAddressToUserAddress(LatLng(double.tryParse(_store?.latitude ?? '') ?? 0, double.tryParse(_store?.longitude ?? '') ?? 0));
         }
         if(fromModule) {
           HomeScreen.loadData(true);

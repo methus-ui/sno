@@ -23,7 +23,7 @@ class StoreDescriptionViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isAvailable = Get.find<StoreController>().isStoreOpenNow(store!.active!, store!.schedules);
+    bool isAvailable = Get.find<StoreController>().isStoreOpenNow(store?.active ?? false, store?.schedules);
     Color? textColor = ResponsiveHelper.isDesktop(context) ? Colors.white : null;
     // Module? moduleData;
     // for(ZoneData zData in AddressHelper.getUserAddressFromSharedPref()!.zoneData!) {
@@ -40,7 +40,7 @@ class StoreDescriptionViewWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
           child: Stack(children: [
             CustomImage(
-              image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${store!.logo}',
+              image: '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}/${store?.logo ?? ''}',
               height: ResponsiveHelper.isDesktop(context) ? 140 : 60, width: ResponsiveHelper.isDesktop(context) ? 140 : 70, fit: BoxFit.cover,
             ),
             isAvailable ? const SizedBox() : Positioned(

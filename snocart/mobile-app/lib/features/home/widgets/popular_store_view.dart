@@ -99,7 +99,7 @@ class PopularStoreView extends StatelessWidget {
                                             Dimensions.radiusSmall),
                                         child: CustomImage(
                                           image:
-                                              '${Get.find<SplashController>().configModel!.baseUrls!.storeCoverPhotoUrl}'
+                                              '${Get.find<SplashController>().configModel?.baseUrls?.storeCoverPhotoUrl}'
                                               '/${storeList[index].coverPhoto}',
                                           height: 50,
                                           width: 50,

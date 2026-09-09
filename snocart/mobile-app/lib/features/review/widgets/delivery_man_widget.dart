@@ -28,7 +28,7 @@ class DeliveryManWidget extends StatelessWidget {
         ListTile(
           leading: ClipOval(
             child: CustomImage(
-              image: '${Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl}/${deliveryMan!.image}',
+              image: '${Get.find<SplashController>().configModel?.baseUrls?.deliveryManImageUrl}/${deliveryMan!.image}',
               height: 40, width: 40, fit: BoxFit.cover,
             ),
           ),

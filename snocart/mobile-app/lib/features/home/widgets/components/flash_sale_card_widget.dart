@@ -84,8 +84,15 @@ class _FlashSaleCardState extends State<FlashSaleCard> {
   }
 
   Widget carouselCard(int index, ActiveProducts activeProduct) {
-    double? discount = activeProduct.item!.storeDiscount == 0 ? activeProduct.item!.discount : activeProduct.item!.storeDiscount;
-    String? discountType = activeProduct.item!.storeDiscount == 0 ? activeProduct.item!.discountType : 'percent';
+    final item = activeProduct.item;
+    if (item == null) {
+      return const SizedBox();
+    }
+    double? discount = item.storeDiscount == 0 ? item.discount : item.storeDiscount;
+    String? discountType = item.storeDiscount == 0 ? item.discountType : 'percent';
+    final String itemImageBase = Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl ?? '';
+    final String itemImagePath = item.image ?? '';
+    final String itemImageUrl = (itemImageBase.isEmpty || itemImagePath.isEmpty) ? '' : '$itemImageBase/$itemImagePath';
     return Column(children: [
         Expanded(
           child: Padding(
@@ -96,7 +103,7 @@ class _FlashSaleCardState extends State<FlashSaleCard> {
               tag: "image$index",
               child: InkWell(
                 hoverColor: Colors.transparent,
-                onTap: widget.soldOut ? null : () => Get.find<ItemController>().navigateToItemPage(activeProduct.item, context),
+                onTap: widget.soldOut ? null : () => Get.find<ItemController>().navigateToItemPage(item, context),
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(color: Theme.of(context).primaryColor.withOpacity(0.2), width: 2),
@@ -109,7 +116,7 @@ class _FlashSaleCardState extends State<FlashSaleCard> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                         child: CustomImage(
-                          image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl!}/${activeProduct.item!.image}',
+                          image: itemImageUrl,
                           fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                         ),
                       ),
@@ -121,7 +128,7 @@ class _FlashSaleCardState extends State<FlashSaleCard> {
                         isFloating: true,
                       ),
 
-                      OrganicTag(item: activeProduct.item!, placeInImage: false),
+                      OrganicTag(item: item, placeInImage: false),
 
                       ResponsiveHelper.isMobile(context) ? Positioned(
                         bottom: -15, left: 0, right: 0,
@@ -137,7 +144,7 @@ class _FlashSaleCardState extends State<FlashSaleCard> {
                             child: Text('sold_out'.tr, style: robotoMedium.copyWith(color: Colors.red)),
                           ),
                         ) : CartCountView(
-                          item: activeProduct.item!,
+                          item: item,
                           child: Center(
                             child: Container(
                               alignment: Alignment.center,
@@ -165,7 +172,7 @@ class _FlashSaleCardState extends State<FlashSaleCard> {
                             child: Text('sold_out'.tr, style: robotoMedium.copyWith(color: Colors.red)),
                           ),
                         ) : CartCountView(
-                          item: activeProduct.item!,
+                          item: item,
                           child: Center(
                             child: Container(
                               alignment: Alignment.center,

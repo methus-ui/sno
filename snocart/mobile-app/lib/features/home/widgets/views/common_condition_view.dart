@@ -42,7 +42,7 @@ class CommonConditionView extends StatelessWidget {
                       padding: EdgeInsets.zero,
                       itemBuilder: (context, index) {
                         bool isSelected = itemController.selectedCommonCondition == index;
-                        double width = double.parse(itemController.commonConditions![index].name!.length.toString()) * 5;
+                        double width = ((itemController.commonConditions?[index].name?.length ?? 0) * 5).toDouble();
                         return InkWell(
                           onTap: () => itemController.selectCommonCondition(index),
                           child: Padding(

@@ -64,7 +64,7 @@ class _WebUpdateProfileWidgetState extends State<WebUpdateProfileWidget> {
                         top: 96,
                         left: (Dimensions.webMaxWidth/2) - 60,
                         child: ImagePickerWidget(
-                          image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}/${profileController.userInfoModel!.image}',
+                          image: '${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}/${profileController.userInfoModel!.image}',
                           onTap: () => profileController.pickImage(), rawFile: profileController.rawFile,
                         )),
                   ],

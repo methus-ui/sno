@@ -67,7 +67,7 @@ class StoreCardWidget extends StatelessWidget {
                   ClipRRect(
                     borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusDefault)),
                     child: CustomImage(
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.storeCoverPhotoUrl}'
+                      image: '${Get.find<SplashController>().configModel?.baseUrls?.storeCoverPhotoUrl}'
                           '/${store!.coverPhoto}',
                       height: 120, width: double.infinity, fit: BoxFit.cover,
                     ),

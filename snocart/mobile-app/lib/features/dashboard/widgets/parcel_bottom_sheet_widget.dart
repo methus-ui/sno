@@ -69,7 +69,7 @@ class ParcelBottomSheetWidget extends StatelessWidget {
                           },
                           child: DeliverItemCardWidget(
                             isDeliverItem: true,
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.parcelCategoryImageUrl}'
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.parcelCategoryImageUrl}'
                                 '/${parcelCategoryList![index].image}',
                             itemName: parcelCategoryList![index].name!,
                             description: parcelCategoryList![index].description!,

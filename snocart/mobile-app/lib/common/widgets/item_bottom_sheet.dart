@@ -193,7 +193,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                           Expanded(
                             child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                               Text(
-                                widget.item!.name!, style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
+                                widget.item?.name ?? '', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge),
                                 maxLines: 2, overflow: TextOverflow.ellipsis,
                               ),
                               InkWell(
@@ -212,7 +212,7 @@ class _ItemBottomSheetState extends State<ItemBottomSheet> {
                                 child: Padding(
                                   padding: const EdgeInsets.fromLTRB(0, 5, 5, 5),
                                   child: Text(
-                                    widget.item!.storeName!,
+                                    widget.item?.storeName ?? '',
                                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).primaryColor),
                                   ),
                                 ),

@@ -36,7 +36,7 @@ class WebItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BaseUrls? baseUrls = Get.find<SplashController>().configModel!.baseUrls;
+    BaseUrls? baseUrls = Get.find<SplashController>().configModel?.baseUrls;
     bool desktop = ResponsiveHelper.isDesktop(context);
     double? discount;
     String? discountType;
@@ -44,12 +44,16 @@ class WebItemWidget extends StatelessWidget {
     if(isStore) {
       discount = store!.discount != null ? store!.discount!.discount : 0;
       discountType = store!.discount != null ? store!.discount!.discountType : 'percent';
-      isAvailable = store!.open == 1 && store!.active!;
+      isAvailable = store!.open == 1 && store!.active == true;
     }else {
       discount = (item!.storeDiscount == 0 || isCampaign) ? item!.discount : item!.storeDiscount;
       discountType = (item!.storeDiscount == 0 || isCampaign) ? item!.discountType : 'percent';
       isAvailable = DateConverter.isAvailable(item!.availableTimeStarts, item!.availableTimeEnds);
     }
+    final String itemImageBase = isCampaign ? (baseUrls?.campaignImageUrl ?? '') : isStore ? (baseUrls?.storeImageUrl ?? '')
+        : (baseUrls?.itemImageUrl ?? '');
+    final String itemImagePath = isStore ? (store?.logo ?? '') : (item?.image ?? '');
+    final String itemImageUrl = (itemImageBase.isEmpty || itemImagePath.isEmpty) ? '' : '$itemImageBase/$itemImagePath';
 
     return InkWell(
       onTap: () {
@@ -100,9 +104,7 @@ class WebItemWidget extends StatelessWidget {
                     ClipRRect(
                       borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusSmall), topRight: Radius.circular(Dimensions.radiusSmall)),
                       child: CustomImage(
-                        image: '${isCampaign ? baseUrls!.campaignImageUrl : isStore ? baseUrls!.storeImageUrl
-                            : baseUrls!.itemImageUrl}'
-                            '/${isStore ? store != null ? store!.logo : '' : item!.image}',
+                        image: itemImageUrl,
                         height: desktop ? 160 : length == null ? 100 : 65, width: desktop ? isStore ? 275 : 300 : 80, fit: BoxFit.cover,
                       ),
                     ),
@@ -127,13 +129,13 @@ class WebItemWidget extends StatelessWidget {
 
                           Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: [
                             Text(
-                              isStore ? store!.name! : item!.name!,
+                              isStore ? (store?.name ?? '') : (item?.name ?? ''),
                               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
                               maxLines: desktop ? 1 : 1, overflow: TextOverflow.ellipsis,
                             ),
                             const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                            (Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg! && Get.find<SplashController>().configModel!.toggleVegNonVeg!)
+                            (Get.find<SplashController>().configModel?.moduleConfig?.module?.vegNonVeg == true && Get.find<SplashController>().configModel?.toggleVegNonVeg == true)
                                 ? Image.asset(item != null && item!.veg == 0 ? Images.nonVegImage : Images.vegImage,
                                 height: 10, width: 10, fit: BoxFit.contain) : const SizedBox(),
                           ]),
@@ -161,9 +163,9 @@ class WebItemWidget extends StatelessWidget {
                                   PriceConverter.convertPrice(item!.price, discount: discount, discountType: discountType),
                                   style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall), textDirection: TextDirection.ltr,
                                 ),
-                                SizedBox(width: discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                                SizedBox(width: (discount ?? 0) > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
-                                discount > 0 ? Text(
+                                (discount ?? 0) > 0 ? Text(
                                   PriceConverter.convertPrice(item!.price),
                                   style: robotoMedium.copyWith(
                                     fontSize: Dimensions.fontSizeOverSmall,

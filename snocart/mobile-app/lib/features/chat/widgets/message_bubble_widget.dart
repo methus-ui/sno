@@ -21,7 +21,7 @@ class MessageBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    BaseUrls? baseUrl = Get.find<SplashController>().configModel!.baseUrls;
+    BaseUrls? baseUrl = Get.find<SplashController>().configModel?.baseUrls;
     bool isReply = message.senderId != Get.find<ProfileController>().userInfoModel!.userInfo!.id;
 
     return (isReply) ? Container(
@@ -36,8 +36,8 @@ class MessageBubbleWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.0),
             child: CustomImage(
               fit: BoxFit.cover, width: 40, height: 40,
-              image: '${userType == UserType.admin.name ? baseUrl!.businessLogoUrl : userType == UserType.vendor.name
-                  ? baseUrl!.storeImageUrl : baseUrl!.deliveryManImageUrl}/${user != null ? user!.image : ''}',
+              image: '${userType == UserType.admin.name ? baseUrl?.businessLogoUrl : userType == UserType.vendor.name
+                  ? baseUrl?.storeImageUrl : baseUrl?.deliveryManImageUrl}/${user?.image ?? ''}',
             ),
           ),
           const SizedBox(width: 10),
@@ -160,7 +160,7 @@ class MessageBubbleWidget extends StatelessWidget {
                               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                               child: CustomImage(
                                 height: 100, width: 100, fit: BoxFit.cover,
-                                image: '${baseUrl!.chatImageUrl}/${message.files![index]}',
+                                image: '${baseUrl?.chatImageUrl ?? ''}/${(message.files != null && index < message.files!.length) ? message.files![index] : ''}',
                               ),
                             ),
                           ),
@@ -175,7 +175,7 @@ class MessageBubbleWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(20.0),
               child: CustomImage(
                 fit: BoxFit.cover, width: 40, height: 40,
-                image: profileController.userInfoModel != null ? '${baseUrl!.customerImageUrl}/${profileController.userInfoModel!.image}' : '',
+                image: profileController.userInfoModel != null ? '${baseUrl?.customerImageUrl ?? ''}/${profileController.userInfoModel?.image ?? ''}' : '',
               ),
             ),
 

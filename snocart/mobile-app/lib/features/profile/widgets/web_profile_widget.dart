@@ -48,7 +48,7 @@ class WebProfileWidget extends StatelessWidget {
                       left: (Dimensions.webMaxWidth/2) - 60,
                       child: ClipOval(child: CustomImage(
                         placeholder: Images.guestIcon,
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}'
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}'
                             '/${(profileController.userInfoModel != null && isLoggedIn) ? profileController.userInfoModel!.image : ''}',
                         height: 120, width: 120, fit: BoxFit.cover,
                     ))),
@@ -99,7 +99,7 @@ class WebProfileWidget extends StatelessWidget {
                     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
                       ClipOval(child: CustomImage(
                         placeholder: Images.guestIcon,
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}'
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}'
                             '/${(profileController.userInfoModel != null && isLoggedIn) ? profileController.userInfoModel!.image : ''}',
                         height: 30, width: 30, fit: BoxFit.cover,
                       )),

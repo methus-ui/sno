@@ -34,8 +34,8 @@ class WebMostPopularItemBannerViewWidget extends StatelessWidget {
                   int index2 = (index * 2) + 1;
                   bool hasSecond = index2 < campaignController.basicCampaignList!.length;
 
-                  String? baseUrl1 = Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl;
-                  String? baseUrl2 = hasSecond ? Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl : '';
+                  String? baseUrl1 = Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl;
+                  String? baseUrl2 = hasSecond ? Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl : '';
 
                   return Row(children: [
 

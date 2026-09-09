@@ -60,7 +60,7 @@ class ItemCampaignView extends StatelessWidget {
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(Dimensions.radiusSmall)),
                             child: CustomImage(
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                              image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                                   '/${campaignController.itemCampaignList![index].image}',
                               height: 90, width: 130, fit: BoxFit.cover,
                             ),

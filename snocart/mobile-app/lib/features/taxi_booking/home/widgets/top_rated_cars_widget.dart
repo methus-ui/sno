@@ -55,7 +55,7 @@ class TopRatedCars extends StatelessWidget {
                                         ClipRRect(
                                           borderRadius: const BorderRadius.all(Radius.circular(5)),
                                           child: CustomImage(
-                                              image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${riderController.topRatedVehicleModel!.vehicles![index].carImages!.isNotEmpty
+                                              image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleImageUrl}/${riderController.topRatedVehicleModel!.vehicles![index].carImages!.isNotEmpty
                                                   ? riderController.topRatedVehicleModel!.vehicles![index].carImages![0] : ''}',
                                               height: 130,width: Get.width),
                                         ),
@@ -78,7 +78,7 @@ class TopRatedCars extends StatelessWidget {
                                 children: [
                                   ClipRRect(
                                       borderRadius: const BorderRadius.all(Radius.circular(3)),
-                                      child: CustomImage(height: 18, width: 18, image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/'
+                                      child: CustomImage(height: 18, width: 18, image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleImageUrl}/'
                                           '${riderController.topRatedVehicleModel!.vehicles![index].provider != null ? riderController.topRatedVehicleModel!.vehicles![index].provider!.logo : ''}'),
                                   ),
                                   const SizedBox(width: Dimensions.paddingSizeExtraSmall),

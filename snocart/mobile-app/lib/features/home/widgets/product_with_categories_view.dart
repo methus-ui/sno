@@ -42,7 +42,7 @@ class BasicCampaignView extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                             '/${campaignController.basicCampaignList![index].image}',
                         width: 200, height: 80, fit: BoxFit.cover,
                       ),

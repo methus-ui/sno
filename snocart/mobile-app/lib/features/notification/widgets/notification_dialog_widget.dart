@@ -31,7 +31,7 @@ class NotificationDialogWidget extends StatelessWidget {
                 ),
               ),
 
-              (notificationModel.data!.image != null && notificationModel.data!.image!.isNotEmpty) ? Container(
+              (notificationModel.data?.image != null && notificationModel.data!.image!.isNotEmpty) ? Container(
                 width: MediaQuery.of(context).size.width,
                 margin: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                 decoration: BoxDecoration(borderRadius: BorderRadius.circular(Dimensions.radiusSmall), color: Theme.of(context).primaryColor.withOpacity(0.20)),
@@ -39,18 +39,18 @@ class NotificationDialogWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   child: CustomImage(
                     isNotification: true,
-                    image: '${Get.find<SplashController>().configModel!.baseUrls!.notificationImageUrl}/${notificationModel.data!.image}',
+                    image: '${Get.find<SplashController>().configModel?.baseUrls?.notificationImageUrl}/${notificationModel.data?.image ?? ''}',
                     width: MediaQuery.of(context).size.width, fit: BoxFit.contain,
                   ),
                 ),
               ) : const SizedBox(),
-              SizedBox(height: (notificationModel.data!.image != null && notificationModel.data!.image!.isNotEmpty)
+              SizedBox(height: (notificationModel.data?.image != null && notificationModel.data!.image!.isNotEmpty)
                   ? Dimensions.paddingSizeLarge : 0),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeLarge),
                 child: Text(
-                  notificationModel.data!.title!,
+                  notificationModel.data?.title ?? '',
                   textAlign: TextAlign.center,
                   style: robotoMedium.copyWith(
                     color: Theme.of(context).primaryColor,

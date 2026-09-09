@@ -47,8 +47,8 @@ class GuestDeliveryAddress extends StatelessWidget {
               if(address != null) {
                 checkoutController.setGuestAddress(address);
                 checkoutController.getDistanceInKM(
-                  LatLng(double.parse(address.latitude), double.parse(address.longitude)),
-                  LatLng(double.parse(checkoutController.store!.latitude!), double.parse(checkoutController.store!.longitude!)),
+                  LatLng(double.tryParse('${address.latitude}') ?? 0, double.tryParse('${address.longitude}') ?? 0),
+                  LatLng(double.tryParse(checkoutController.store?.latitude ?? '') ?? 0, double.tryParse(checkoutController.store?.longitude ?? '') ?? 0),
                 );
               }
             },

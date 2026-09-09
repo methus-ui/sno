@@ -136,7 +136,7 @@ class BestStoreNearbyView extends StatelessWidget {
                       itemCount: storeList.length,
                       itemBuilder: (context, index) {
                         double distance = Get.find<StoreController>().getRestaurantDistance(
-                          LatLng(double.parse(storeList[index].latitude!), double.parse(storeList[index].longitude!)),
+                          LatLng(double.tryParse(storeList[index].latitude ?? '') ?? 0, double.tryParse(storeList[index].longitude ?? '') ?? 0),
                         );
 
                         return Padding(
@@ -235,7 +235,7 @@ class BestStoreNearbyView extends StatelessWidget {
                                     child: Stack(children: [
 
                                       CustomImage(
-                                        image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}'
+                                        image: '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}'
                                             '/${storeList[index].logo}',
                                         fit: BoxFit.cover,
                                         height: double.infinity, width: double.infinity,

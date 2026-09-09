@@ -57,7 +57,7 @@ class _MiddleSectionBannerViewState extends State<MiddleSectionBannerView> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.radiusLarge),
                       child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                             '/${campaignController.basicCampaignList![itemIndex].image}',
                         fit: BoxFit.cover, height: 80, width: double.infinity,
                       ),

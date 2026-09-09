@@ -100,7 +100,7 @@ class _WebFeaturedCategoriesViewWidgetState extends State<WebFeaturedCategoriesV
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           bool isSelected = itemController.selectedCategory == index;
-                          double width = double.parse(categoryList[index].name!.length.toString()) * 5;
+                          double width = ((categoryList[index].name?.length ?? 0) * 5).toDouble();
                           return Column(children: [
                             InkWell(
                               onTap: () {

@@ -61,8 +61,8 @@ class OrderItemWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
             child: CustomImage(
               height: 50, width: 50, fit: BoxFit.cover,
-              image: '${orderDetails.itemCampaignId != null ? Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl
-                  : Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/'
+              image: '${orderDetails.itemCampaignId != null ? Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl
+                  : Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl}/'
                   '${orderDetails.itemDetails!.image}',
             ),
           ),

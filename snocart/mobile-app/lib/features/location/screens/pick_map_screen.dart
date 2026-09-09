@@ -47,8 +47,8 @@ class _PickMapScreenState extends State<PickMapScreen> {
       Get.find<LocationController>().setPickData();
     }
     _initialPosition = LatLng(
-      double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
-      double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
+      double.tryParse(Get.find<SplashController>().configModel?.defaultLocation?.lat ?? '') ?? 0,
+      double.tryParse(Get.find<SplashController>().configModel?.defaultLocation?.lng ?? '') ?? 0,
     );
   }
 

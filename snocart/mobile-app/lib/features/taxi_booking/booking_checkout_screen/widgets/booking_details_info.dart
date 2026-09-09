@@ -64,7 +64,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                   children: [
                     CustomImage(
                       width: 48, height: 46,
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${widget.vehicle.carImages!.isNotEmpty ? widget.vehicle.carImages![0] : ''}',
+                      image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleImageUrl}/${widget.vehicle.carImages!.isNotEmpty ? widget.vehicle.carImages![0] : ''}',
                     ),
                     const SizedBox(width: Dimensions.paddingSizeDefault),
 
@@ -76,7 +76,7 @@ class _BookingDetailsInfoState extends State<BookingDetailsInfo> {
                           children: [
                             CustomImage(
                               width: 20, height: 20,
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleBrandImageUrl}/${''}',
+                              image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleBrandImageUrl}/${''}',
                             ),
                             Text(widget.vehicle.categoryName!, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall))
                           ],

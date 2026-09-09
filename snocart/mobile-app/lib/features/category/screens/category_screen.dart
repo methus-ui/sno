@@ -56,9 +56,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
                 itemCount: catController.categoryList!.length,
                 itemBuilder: (context, index) {
+                  final category = catController.categoryList![index];
+                  final String categoryName = category.name ?? 'category'.tr;
+                  final String categoryImage = category.image ?? '';
+                  final String categoryBaseUrl = Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl ?? '';
+                  final String categoryImageUrl = (categoryBaseUrl.isEmpty || categoryImage.isEmpty) ? '' : '$categoryBaseUrl/$categoryImage';
                   return InkWell(
                     onTap: () => Get.toNamed(RouteHelper.getCategoryItemRoute(
-                      catController.categoryList![index].id, catController.categoryList![index].name!,
+                      category.id, categoryName,
                     )),
                     child: Container(
                       decoration: BoxDecoration(
@@ -73,13 +78,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           child: CustomImage(
                             height: 50, width: 50, fit: BoxFit.cover,
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}/${catController.categoryList![index].image}',
+                            image: categoryImageUrl,
                           ),
                         ),
                         const SizedBox(height: Dimensions.paddingSizeExtraSmall),
 
                         Text(
-                          catController.categoryList![index].name!, textAlign: TextAlign.center,
+                          categoryName, textAlign: TextAlign.center,
                           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                           maxLines: 2, overflow: TextOverflow.ellipsis,
                         ),

@@ -108,9 +108,9 @@ class OrderViewWidget extends StatelessWidget {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                       child: CustomImage(
-                                        image: isParcel ? '${Get.find<SplashController>().configModel!.baseUrls!.parcelCategoryImageUrl}'
+                                        image: isParcel ? '${Get.find<SplashController>().configModel?.baseUrls?.parcelCategoryImageUrl}'
                                             '/${paginatedOrderModel.orders![index].parcelCategory != null ? paginatedOrderModel.orders![index].parcelCategory!.image : ''}'
-                                            : '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${paginatedOrderModel.orders![index].store != null
+                                            : '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}/${paginatedOrderModel.orders![index].store != null
                                             ? paginatedOrderModel.orders![index].store!.logo : ''}',
                                         height: isParcel ? 35 : ResponsiveHelper.isDesktop(context) ? 80 : 60,
                                         width: isParcel ? 35 : ResponsiveHelper.isDesktop(context) ? 80 : 60, fit: isParcel ? null : BoxFit.cover,

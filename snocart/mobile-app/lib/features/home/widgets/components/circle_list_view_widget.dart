@@ -76,7 +76,7 @@ class _CircleListViewState extends State<CircleListView> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                               child: CustomImage(
-                                image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                                image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                                     '/${itemCampaignList[index].image}',
                                 fit: BoxFit.cover,
                               ),

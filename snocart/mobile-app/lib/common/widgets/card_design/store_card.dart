@@ -30,8 +30,11 @@ class StoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isPharmacy = Get.find<SplashController>().module != null && Get.find<SplashController>().module!.moduleType.toString() == AppConstants.pharmacy;
     double distance = Get.find<StoreController>().getRestaurantDistance(
-      LatLng(double.parse(store.latitude!), double.parse(store.longitude!)),
+      LatLng(double.tryParse(store.latitude ?? '') ?? 0, double.tryParse(store.longitude ?? '') ?? 0),
     );
+    final String storeImageBase = Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl ?? '';
+    final String storeLogo = store.logo ?? '';
+    final String storeImageUrl = (storeImageBase.isEmpty || storeLogo.isEmpty) ? '' : '$storeImageBase/$storeLogo';
 
     return Stack(children: [
 
@@ -70,7 +73,7 @@ class StoreCard extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                     child: CustomImage(
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}''/${store.logo}',
+                      image: storeImageUrl,
                       height: 50, width: 50, fit: BoxFit.cover,
                     ),
                   ),

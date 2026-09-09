@@ -83,7 +83,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           ClipOval(child: CustomImage(
                             placeholder: Images.guestIcon,
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}'
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}'
                                 '/${(profileController.userInfoModel != null && isLoggedIn) ? profileController.userInfoModel!.image : ''}',
                             height: 70, width: 70, fit: BoxFit.cover,
                           )),

@@ -37,9 +37,9 @@ class WebBonusBannerWidget extends StatelessWidget {
                     bool hasSecond = index2 < walletController.fundBonusList!.length;
 
                     // String? baseUrl1 = bannerController.bannerDataList![index1] is BasicCampaignModel ? Get.find<SplashController>()
-                    //     .configModel!.baseUrls!.campaignImageUrl : Get.find<SplashController>().configModel!.baseUrls!.bannerImageUrl;
+                    //     .configModel?.baseUrls?.campaignImageUrl : Get.find<SplashController>().configModel?.baseUrls?.bannerImageUrl;
                     // String? baseUrl2 = hasSecond ? bannerController.bannerDataList![index2] is BasicCampaignModel ? Get.find<SplashController>()
-                    //     .configModel!.baseUrls!.campaignImageUrl : Get.find<SplashController>().configModel!.baseUrls!.bannerImageUrl : '';
+                    //     .configModel?.baseUrls?.campaignImageUrl : Get.find<SplashController>().configModel?.baseUrls?.bannerImageUrl : '';
 
                     return Row(children: [
                       Expanded(child: Container(

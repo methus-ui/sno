@@ -32,8 +32,14 @@ class StoreCardWithDistance extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isPharmacy = Get.find<SplashController>().module != null && Get.find<SplashController>().module!.moduleType.toString() == AppConstants.pharmacy;
     double distance = Get.find<StoreController>().getRestaurantDistance(
-      LatLng(double.parse(store.latitude!), double.parse(store.longitude!)),
+      LatLng(double.tryParse(store.latitude ?? '') ?? 0, double.tryParse(store.longitude ?? '') ?? 0),
     );
+    final String storeImgBase = Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl ?? '';
+    final String storeCoverBase = Get.find<SplashController>().configModel?.baseUrls?.storeCoverPhotoUrl ?? '';
+    final String storeLogo = store.logo ?? '';
+    final String storeCover = store.coverPhoto ?? '';
+    final String storeLogoUrl = (storeImgBase.isEmpty || storeLogo.isEmpty) ? '' : '$storeImgBase/$storeLogo';
+    final String storeCoverUrl = (storeCoverBase.isEmpty || storeCover.isEmpty) ? '' : '$storeCoverBase/$storeCover';
     return Stack(
       children: [
         Container(
@@ -66,8 +72,7 @@ class StoreCardWithDistance extends StatelessWidget {
                   borderRadius: const BorderRadius.only(topLeft: Radius.circular(Dimensions.radiusDefault), topRight: Radius.circular(Dimensions.radiusDefault)),
                   child: Stack(clipBehavior: Clip.none, children: [
                     CustomImage(
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.storeCoverPhotoUrl}'
-                          '/${store.coverPhoto}',
+                      image: storeCoverUrl,
                       fit: BoxFit.cover, height: double.infinity, width: double.infinity,
                     ),
 
@@ -107,7 +112,7 @@ class StoreCardWithDistance extends StatelessWidget {
                       }),
                     ),
 
-                    isNewStore! ? const NewTag() : const SizedBox(),
+                    isNewStore == true ? const NewTag() : const SizedBox(),
                   ]),
                 ),
               ),
@@ -212,7 +217,7 @@ class StoreCardWithDistance extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                   child: CustomImage(
-                    image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${store.logo}',
+                    image: storeLogoUrl,
                     fit: BoxFit.cover, height: double.infinity, width: double.infinity,
                   ),
                 ),
@@ -227,7 +232,7 @@ class StoreCardWithDistance extends StatelessWidget {
                     boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10)]
                   ),
                   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(store.avgRating!.toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
+                    Text((store.avgRating ?? 0).toStringAsFixed(1), style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
                     const SizedBox(width: 3),
 
                     Icon(Icons.star, color: Theme.of(context).primaryColor, size: 15),

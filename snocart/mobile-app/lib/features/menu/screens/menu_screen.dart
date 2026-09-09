@@ -53,7 +53,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       child: CustomImage(
                     placeholder: Images.guestIconLight,
                     image:
-                        '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}'
+                        '${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}'
                         '/${(profileController.userInfoModel != null && isLoggedIn) ? profileController.userInfoModel!.image : ''}',
                     height: 70,
                     width: 70,

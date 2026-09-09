@@ -37,7 +37,7 @@ class StoreBannerWidget extends StatelessWidget {
             },
             child: ClipRRect(
               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
-              child: CustomImage(image: '${ Get.find<SplashController>().configModel!.baseUrls!.bannerImageUrl}/${storeController.storeBanners![index].image}'),
+              child: CustomImage(image: '${ Get.find<SplashController>().configModel?.baseUrls?.bannerImageUrl}/${storeController.storeBanners![index].image}'),
             ),
           );
         },

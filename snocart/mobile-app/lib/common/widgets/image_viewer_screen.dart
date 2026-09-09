@@ -16,14 +16,14 @@ class ImageViewerScreen extends StatelessWidget {
     Get.find<ItemController>().setImageIndex(0, false);
     List<String?> imageList = [];
     imageList.add(item.image);
-    imageList.addAll(item.images!);
+    if (item.images != null) imageList.addAll(item.images!);
     final PageController pageController = PageController();
 
     return Scaffold(
       appBar: CustomAppBar(title: 'product_images'.tr),
       body: GetBuilder<ItemController>(builder: (itemController) {
         String? baseUrl = item.availableDateStarts == null ? Get.find<SplashController>().
-        configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl;
+        configModel?.baseUrls?.itemImageUrl : Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl;
         return Column(children: [
 
           Expanded(child: Stack(children: [

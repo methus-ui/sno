@@ -150,11 +150,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
                         String? baseUrl = '';
                         if(type == UserType.vendor.name) {
-                          baseUrl = Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl;
+                          baseUrl = Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl;
                         }else if(type == UserType.delivery_man.name) {
-                          baseUrl = Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl;
+                          baseUrl = Get.find<SplashController>().configModel?.baseUrls?.deliveryManImageUrl;
                         }else if(type == UserType.admin.name){
-                          baseUrl = Get.find<SplashController>().configModel!.baseUrls!.businessLogoUrl;
+                          baseUrl = Get.find<SplashController>().configModel?.baseUrls?.businessLogoUrl;
                         }
 
                         return Container(

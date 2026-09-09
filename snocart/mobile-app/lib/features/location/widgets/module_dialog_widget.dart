@@ -56,7 +56,7 @@ class ModuleDialogWidget extends StatelessWidget {
                       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
 
                         CustomImage(
-                          image: '${splashController.configModel!.baseUrls!.moduleImageUrl}/${splashController.moduleList![index].icon}',
+                          image: '${splashController.configModel?.baseUrls?.moduleImageUrl}/${splashController.moduleList![index].icon}',
                           height: 80, width: 80,
                         ),
                         const SizedBox(height: Dimensions.paddingSizeSmall),

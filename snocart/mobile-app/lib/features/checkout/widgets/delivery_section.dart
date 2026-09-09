@@ -50,8 +50,8 @@ class DeliverySection extends StatelessWidget {
                 var address = await Get.toNamed(RouteHelper.getAddAddressRoute(true, false, checkoutController.store!.zoneId));
                 if(address != null) {
                   checkoutController.getDistanceInKM(
-                    LatLng(double.parse(address.latitude), double.parse(address.longitude)),
-                    LatLng(double.parse(checkoutController.store!.latitude!), double.parse(checkoutController.store!.longitude!)),
+                    LatLng(double.tryParse('${address.latitude}') ?? 0, double.tryParse('${address.longitude}') ?? 0),
+                    LatLng(double.tryParse(checkoutController.store?.latitude ?? '') ?? 0, double.tryParse(checkoutController.store?.longitude ?? '') ?? 0),
                   );
                   checkoutController.streetNumberController.text = address.streetNumber ?? '';
                   checkoutController.houseController.text = address.house ?? '';
@@ -97,10 +97,10 @@ class DeliverySection extends StatelessWidget {
                         onTap: () {
                           checkoutController.getDistanceInKM(
                             LatLng(
-                              double.parse(address[index].latitude!),
-                              double.parse(address[index].longitude!),
+                              double.tryParse(address[index].latitude ?? '') ?? 0,
+                              double.tryParse(address[index].longitude ?? '') ?? 0,
                             ),
-                            LatLng(double.parse(checkoutController.store!.latitude!), double.parse(checkoutController.store!.longitude!)),
+                            LatLng(double.tryParse(checkoutController.store?.latitude ?? '') ?? 0, double.tryParse(checkoutController.store?.longitude ?? '') ?? 0),
                           );
                           checkoutController.setAddressIndex(index);
                           checkoutController.streetNumberController.text = address[checkoutController.addressIndex!].streetNumber ?? '';
@@ -158,10 +158,10 @@ class DeliverySection extends StatelessWidget {
               onChange: (int? value, int index) {
                 checkoutController.getDistanceInKM(
                   LatLng(
-                    double.parse(address[index].latitude!),
-                    double.parse(address[index].longitude!),
+                    double.tryParse(address[index].latitude ?? '') ?? 0,
+                    double.tryParse(address[index].longitude ?? '') ?? 0,
                   ),
-                  LatLng(double.parse(checkoutController.store!.latitude!), double.parse(checkoutController.store!.longitude!)),
+                  LatLng(double.tryParse(checkoutController.store?.latitude ?? '') ?? 0, double.tryParse(checkoutController.store?.longitude ?? '') ?? 0),
                 );
                 checkoutController.setAddressIndex(index);
 

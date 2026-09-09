@@ -137,7 +137,7 @@ class Item {
     name = json['name'];
     description = json['description'];
     image = json['image'];
-    images = json['images'] != null ? json['images'].cast<String>() : [];
+    images = json['images'] != null ? List<String>.from(json['images'].map((e) => e.toString())) : [];
     categoryId = json['category_id'];
     if (json['category_ids'] != null) {
       categoryIds = [];
@@ -175,18 +175,18 @@ class Item {
         choiceOptions!.add(ChoiceOptions.fromJson(v));
       });
     }
-    price = json['price'].toDouble();
+    price = json['price']?.toDouble() ?? 0;
     tax = json['tax']?.toDouble();
-    discount = json['discount'].toDouble();
+    discount = json['discount']?.toDouble() ?? 0;
     discountType = json['discount_type'];
     availableTimeStarts = json['available_time_starts'];
     availableTimeEnds = json['available_time_ends'];
     storeId = json['store_id'];
     storeName = json['store_name'];
     zoneId = json['zone_id'];
-    storeDiscount = json['store_discount'].toDouble();
+    storeDiscount = json['store_discount']?.toDouble() ?? 0;
     scheduleOrder = json['schedule_order'];
-    avgRating = json['avg_rating'].toDouble();
+    avgRating = json['avg_rating']?.toDouble() ?? 0;
     ratingCount = json['rating_count'];
     moduleId = json['module_id'];
     moduleType = json['module_type'];
@@ -300,7 +300,7 @@ class AddOns {
   AddOns.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
-    price = json['price'].toDouble();
+    price = json['price']?.toDouble() ?? 0;
   }
 
   Map<String, dynamic> toJson() {

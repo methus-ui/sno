@@ -173,8 +173,8 @@ class _SelectLocationViewWidgetState extends State<SelectLocationViewWidget> {
             GoogleMap(
               initialCameraPosition: CameraPosition(
                 target: LatLng(
-                  double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
-                  double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
+                  double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lat ?? '0'),
+                  double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lng ?? '0'),
                 ), zoom: 16,
               ),
               minMaxZoomPreference: const MinMaxZoomPreference(0, 16),

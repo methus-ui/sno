@@ -102,7 +102,7 @@ class LocationController extends GetxController implements GetxService {
 
   void setUpdateAddress(AddressModel address){
     _position = Position(
-      latitude: double.parse(address.latitude!), longitude: double.parse(address.longitude!), timestamp: DateTime.now(),
+      latitude: double.tryParse(address.latitude ?? '') ?? 0, longitude: double.tryParse(address.longitude ?? '') ?? 0, timestamp: DateTime.now(),
       altitude: 1, heading: 1, speed: 1, speedAccuracy: 1, floor: 1, accuracy: 1, altitudeAccuracy: 1, headingAccuracy: 1,
     );
     _address = address.address;
@@ -125,8 +125,8 @@ class LocationController extends GetxController implements GetxService {
     }
     AddressModel addressModel;
     Position myPosition = await locationServiceInterface.getPosition(defaultLatLng, LatLng(
-      double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
-      double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
+      double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lat ?? '0'),
+      double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lng ?? '0'),
     ));
     fromAddress ? _position = myPosition : _pickPosition = myPosition;
 
@@ -340,8 +340,8 @@ class LocationController extends GetxController implements GetxService {
 
     if(isActiveLocation) {
       Position myPosition = await locationServiceInterface.getPosition(null, LatLng(
-        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
-        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
+        double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lat ?? '0'),
+        double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lng ?? '0'),
       ));
 
       double distance = Geolocator.distanceBetween(
