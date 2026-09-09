@@ -56,7 +56,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           child: CustomImage(
                             fit: BoxFit.cover, height: 200, width: 1150,
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}/${widget.campaign.image}',
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}/${widget.campaign.image}',
                           ),
                         ),
                       ),
@@ -139,7 +139,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                 // ),
                 background: CustomImage(
                   fit: BoxFit.cover,
-                  image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}/${widget.campaign.image}',
+                  image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}/${widget.campaign.image}',
                 ),
               ),
               actions: const [
@@ -163,7 +163,7 @@ class _CampaignScreenState extends State<CampaignScreen> {
                       ClipRRect(
                         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                         child: CustomImage(
-                          image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}/${campaignController.basicCampaign!.image}',
+                          image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}/${campaignController.basicCampaign!.image}',
                           height: 40, width: 50, fit: BoxFit.cover,
                         ),
                       ),

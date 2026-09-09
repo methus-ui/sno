@@ -75,7 +75,7 @@ class _InterestScreenState extends State<InterestScreen> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                               child: CustomImage(
-                                image: '${Get.find<SplashController>().configModel!.baseUrls!.categoryImageUrl}'
+                                image: '${Get.find<SplashController>().configModel?.baseUrls?.categoryImageUrl}'
                                     '/${categoryController.categoryList![index].image}',
                                 height: 30, width: 30,
                               ),

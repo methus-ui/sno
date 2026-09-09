@@ -21,11 +21,15 @@ class FlashProductCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double? discount = product.item!.storeDiscount == 0 ? product.item!.discount : product.item!.storeDiscount;
-    String? discountType = product.item!.storeDiscount == 0 ? product.item!.discountType : 'percent';
+    final item = product.item;
+    if (item == null) {
+      return const SizedBox();
+    }
+    double? discount = item.storeDiscount == 0 ? item.discount : item.storeDiscount;
+    String? discountType = item.storeDiscount == 0 ? item.discountType : 'percent';
 
-    int stock = product.stock!;
-    int sold = product.sold!;
+    int stock = product.stock ?? 0;
+    int sold = product.sold ?? 0;
     int remaining = stock - sold;
     return Container(
       decoration: BoxDecoration(
@@ -44,7 +48,7 @@ class FlashProductCardWidget extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                 child: CustomImage(
-                  image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, product.item?.image),
+                  image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, item.image),
                   fit: BoxFit.cover, width: double.infinity, height: double.infinity,
                 ),
               ),
@@ -56,11 +60,11 @@ class FlashProductCardWidget extends StatelessWidget {
                 isFloating: true,
               ),
 
-              OrganicTag(item: product.item!, placeInImage: false),
+              OrganicTag(item: item, placeInImage: false),
 
               AddFavouriteView(
                 top: 5, right: 5,
-                item: product.item!,
+                item: item,
               ),
 
               ResponsiveHelper.isDesktop(context) ? Positioned(
@@ -77,7 +81,7 @@ class FlashProductCardWidget extends StatelessWidget {
                     child: Text('sold_out'.tr, style: robotoMedium.copyWith(color: Colors.red)),
                   ),
                 ) : CartCountView(
-                  item: product.item!,
+                  item: item,
                   child: Center(
                     child: Container(
                       alignment: Alignment.center,
@@ -103,28 +107,28 @@ class FlashProductCardWidget extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(product.item!.name ?? '', maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: robotoMedium),
+                  Text(item.name ?? '', maxLines: 2, overflow: TextOverflow.ellipsis, textAlign: TextAlign.center, style: robotoMedium),
 
-                  (Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && product.item!.unitType != null) ? Text(
-                    '(${ product.item!.unitType ?? ''})',
+                  (Get.find<SplashController>().configModel?.moduleConfig?.module?.unit == true && item.unitType != null) ? Text(
+                    '(${ item.unitType ?? ''})',
                     style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
                   ) : const SizedBox(),
 
                   Wrap(children: [
 
-                    product.item!.discount != null && product.item!.discount! > 0  ? Text(
-                      PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(product.item!)),
+                    item.discount != null && item.discount! > 0  ? Text(
+                      PriceConverter.convertPrice(Get.find<ItemController>().getStartingPrice(item)),
                       style: robotoMedium.copyWith(
                         fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).disabledColor,
                         decoration: TextDecoration.lineThrough,
                       ), textDirection: TextDirection.ltr,
                     ) : const SizedBox(),
-                    SizedBox(width: product.item!.discount != null && product.item!.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
+                    SizedBox(width: item.discount != null && item.discount! > 0 ? Dimensions.paddingSizeExtraSmall : 0),
 
                     Text(
                       PriceConverter.convertPrice(
-                        Get.find<ItemController>().getStartingPrice(product.item!), discount: product.item!.discount,
-                        discountType: product.item!.discountType,
+                        Get.find<ItemController>().getStartingPrice(item), discount: item.discount,
+                        discountType: item.discountType,
                       ),
                       textDirection: TextDirection.ltr, style: robotoMedium,
                     ),

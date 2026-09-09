@@ -50,7 +50,7 @@ class _ItemReviewWidgetState extends State<ItemReviewWidget> {
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       child: CustomImage(
                         height: 70, width: 85, fit: BoxFit.cover,
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl}'
                             '/${widget.orderDetailsList[index].itemDetails!.image}',
                       ),
                     ),

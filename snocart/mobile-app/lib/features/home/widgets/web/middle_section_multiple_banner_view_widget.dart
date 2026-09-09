@@ -40,7 +40,7 @@ class MiddleSectionMultipleBannerViewWidget extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
                   child: CustomImage(
-                    image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                    image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                         '/${campaignController.basicCampaignList![index].image}',
                     fit: BoxFit.cover, height: 230, width: double.infinity,
                   ),

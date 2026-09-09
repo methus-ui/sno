@@ -198,7 +198,7 @@ class _PaymentMethodBottomSheetState extends State<PaymentMethodBottomSheet> {
 
                                 Expanded(
                                   child: Text(
-                                    Get.find<SplashController>().configModel!.activePaymentMethodList![index].getWayTitle!,
+                                    Get.find<SplashController>().configModel?.activePaymentMethodList?[index].getWayTitle ?? '',
                                     style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeDefault),
                                     overflow: TextOverflow.ellipsis, maxLines: 1,
                                   ),
@@ -206,7 +206,7 @@ class _PaymentMethodBottomSheetState extends State<PaymentMethodBottomSheet> {
 
                                 CustomImage(
                                   height: 20, fit: BoxFit.contain,
-                                  image: '${Get.find<SplashController>().configModel!.baseUrls!.gatewayImageUrl}/${Get.find<SplashController>().configModel!.activePaymentMethodList![index].getWayImage!}',
+                                  image: '${Get.find<SplashController>().configModel?.baseUrls?.gatewayImageUrl ?? ''}/${Get.find<SplashController>().configModel?.activePaymentMethodList?[index].getWayImage ?? ''}',
                                 ),
                                 const SizedBox(width: Dimensions.paddingSizeSmall),
                               ]),

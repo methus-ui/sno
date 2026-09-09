@@ -33,10 +33,10 @@ class DetailsWebViewWidget extends StatelessWidget {
     return GetBuilder<ItemController>(builder: (itemController) {
       List<String?> imageList = [];
       imageList.add(itemController.item!.image);
-      imageList.addAll(itemController.item!.images!);
+      if (itemController.item!.images != null) imageList.addAll(itemController.item!.images!);
 
       String? baseUrl = itemController.item!.availableDateStarts == null ? Get.find<SplashController>().
-      configModel!.baseUrls!.itemImageUrl : Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl;
+      configModel?.baseUrls?.itemImageUrl : Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl;
 
       return SingleChildScrollView(child: FooterView(
         child: ConstrainedBox(

@@ -24,7 +24,7 @@ class ReviewWidget extends StatelessWidget {
 
           ClipOval(
             child: CustomImage(
-              image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}/${review.itemImage ?? ''}',
+              image: '${Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl}/${review.itemImage ?? ''}',
               height: 60, width: 60, fit: BoxFit.cover,
             ),
           ),

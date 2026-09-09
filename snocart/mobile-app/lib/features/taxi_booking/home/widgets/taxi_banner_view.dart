@@ -38,7 +38,7 @@ class TaxiBannerView extends StatelessWidget {
                 itemCount: bannerList.isEmpty ? 1 : bannerList.length,
                 itemBuilder: (context, index, _) {
                   String? baseUrl = bannerDataList![index] is BasicCampaignModel ? Get.find<SplashController>()
-                      .configModel!.baseUrls!.campaignImageUrl  : Get.find<SplashController>().configModel!.baseUrls!.bannerImageUrl;
+                      .configModel?.baseUrls?.campaignImageUrl  : Get.find<SplashController>().configModel?.baseUrls?.bannerImageUrl;
                   return InkWell(
                     onTap: () async {},
                     child: Container(

@@ -99,7 +99,7 @@ class TrackDetailsViewWidget extends StatelessWidget {
         ]),
 
         Align(alignment: Alignment.centerLeft, child: Text(
-          takeAway ? Get.find<SplashController>().configModel!.moduleConfig!.module!.showRestaurantText!
+          takeAway ? Get.find<SplashController>().configModel?.moduleConfig?.module?.showRestaurantText == true
               ? 'store'.tr : 'store'.tr : 'delivery_man'.tr,
           style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
         )),
@@ -107,15 +107,15 @@ class TrackDetailsViewWidget extends StatelessWidget {
 
         Row(children: [
           ClipOval(child: CustomImage(
-            image: '${takeAway ? Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl
-                : Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl}/${takeAway ? track.store != null ? track.store!.logo : ''
-                : track.deliveryMan!.image}',
+            image: '${takeAway ? Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl
+                : Get.find<SplashController>().configModel?.baseUrls?.deliveryManImageUrl}/${takeAway ? track.store?.logo ?? ''
+                : track.deliveryMan?.image ?? ''}',
             height: 35, width: 35, fit: BoxFit.cover,
           )),
           const SizedBox(width: Dimensions.paddingSizeSmall),
           Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              takeAway ? track.store != null ? track.store!.name! : '' : '${track.deliveryMan!.fName} ${track.deliveryMan!.lName}',
+              takeAway ? track.store?.name ?? '' : '${track.deliveryMan?.fName ?? ''} ${track.deliveryMan?.lName ?? ''}',
               maxLines: 1, overflow: TextOverflow.ellipsis,
               style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall),
             ),

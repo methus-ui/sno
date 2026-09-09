@@ -147,7 +147,7 @@ class CarFilterWidget extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                   child: CustomImage(
-                                      image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleBrandImageUrl}/${carSelectionController.brandModels![index].logo}',
+                                      image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleBrandImageUrl}/${carSelectionController.brandModels![index].logo}',
                                   ),
                                 ),
                             ),

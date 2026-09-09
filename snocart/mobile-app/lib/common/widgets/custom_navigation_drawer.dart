@@ -160,7 +160,7 @@ class CollapsingListTileState extends State<CollapsingListTile> {
             ClipRRect(
               borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
               child: CustomImage(
-                image: '${Get.find<SplashController>().configModel!.baseUrls!.moduleImageUrl}/${widget.icon}',
+                image: '${Get.find<SplashController>().configModel?.baseUrls?.moduleImageUrl}/${widget.icon}',
                 width: 25, height: 25,
               ),
             ),

@@ -125,7 +125,7 @@ class _ParcelCategoryScreenState extends State<ParcelCategoryScreen> {
                             radius: Dimensions.radiusDefault,
                             child: DeliverItemCardWidget(
                               isDeliverItem: true,
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.parcelCategoryImageUrl}'
+                              image: '${Get.find<SplashController>().configModel?.baseUrls?.parcelCategoryImageUrl}'
                                   '/${parcelController.parcelCategoryList![index].image}',
                               itemName: parcelController.parcelCategoryList![index].name!,
                               description: parcelController.parcelCategoryList![index].description!,
@@ -174,7 +174,7 @@ class _ParcelCategoryScreenState extends State<ParcelCategoryScreen> {
                             child: CustomImage(image: '${parcelController.videoContentDetails!.promotionalBannerUrl}/${parcelController.videoContentDetails!.bannerImage}'),
                           )
                               : parcelController.videoContentDetails!.bannerType == 'video' ? GetServiceVideoWidget(youtubeVideoUrl: parcelController.videoContentDetails!.bannerVideo ?? '', fileVideoUrl: '',)
-                              : GetServiceVideoWidget(youtubeVideoUrl: '', fileVideoUrl: '${parcelController.videoContentDetails!.bannerVideoContentUrl!}/${parcelController.videoContentDetails!.bannerVideoContent}'),
+                              : GetServiceVideoWidget(youtubeVideoUrl: '', fileVideoUrl: '${parcelController.videoContentDetails?.bannerVideoContentUrl ?? ''}/${parcelController.videoContentDetails?.bannerVideoContent ?? ''}'),
                         ) : const SizedBox(),
                         const SizedBox(width: 125),
 
@@ -189,7 +189,7 @@ class _ParcelCategoryScreenState extends State<ParcelCategoryScreen> {
                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           child: CustomImage(image: '${parcelController.videoContentDetails!.promotionalBannerUrl}/${parcelController.videoContentDetails!.bannerImage}'),
                         ) : parcelController.videoContentDetails!.bannerType == 'video' ? GetServiceVideoWidget(youtubeVideoUrl: parcelController.videoContentDetails!.bannerVideo ?? '', fileVideoUrl: '',)
-                            : GetServiceVideoWidget(youtubeVideoUrl: '', fileVideoUrl: '${parcelController.videoContentDetails!.bannerVideoContentUrl!}/${parcelController.videoContentDetails!.bannerVideoContent}'),
+                            : GetServiceVideoWidget(youtubeVideoUrl: '', fileVideoUrl: '${parcelController.videoContentDetails?.bannerVideoContentUrl ?? ''}/${parcelController.videoContentDetails?.bannerVideoContent ?? ''}'),
                         
                         const SizedBox(height: Dimensions.paddingSizeLarge),
 

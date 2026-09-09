@@ -77,8 +77,8 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     }
     if(widget.address == null) {
       _initialPosition = LatLng(
-        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lat ?? '0'),
-        double.parse(Get.find<SplashController>().configModel!.defaultLocation!.lng ?? '0'),
+        double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lat ?? '0'),
+        double.parse(Get.find<SplashController>().configModel?.defaultLocation?.lng ?? '0'),
       );
     }else {
       Get.find<LocationController>().setUpdateAddress(widget.address!);

@@ -61,14 +61,14 @@ class _NewRequestDialogState extends State<NotificationPopUpDialogWidget> {
                   widget.payloadModel.body!, textAlign: TextAlign.center,
                   style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeLarge),
                 ),
-                if(widget.payloadModel.image != 'null')
+                if(widget.payloadModel.image != null && widget.payloadModel.image != 'null')
                   const SizedBox(height: Dimensions.paddingSizeExtraSmall,),
 
-                if(widget.payloadModel.image != 'null')
+                if(widget.payloadModel.image != null && widget.payloadModel.image != 'null')
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: FadeInImage.assetNetwork(
-                      image: widget.payloadModel.image!,
+                      image: widget.payloadModel.image ?? '',
                       height: 100,
                       width: 500,
                       placeholder: Images.placeholder,

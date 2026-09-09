@@ -97,7 +97,7 @@ class _WebJustForYouViewWidgetState extends State<WebJustForYouViewWidget> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                           child: CustomImage(
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                                 '/${campaignController.itemCampaignList![index].image}',
                             fit: BoxFit.cover, height: 185, width: 185,
                           ),

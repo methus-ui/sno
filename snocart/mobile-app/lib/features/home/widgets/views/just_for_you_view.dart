@@ -53,7 +53,7 @@ class _JustForYouViewState extends State<JustForYouView> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(Dimensions.radiusDefault),
                             child: CustomImage(
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.campaignImageUrl}'
+                              image: '${Get.find<SplashController>().configModel?.baseUrls?.campaignImageUrl}'
                                   '/${campaignController.itemCampaignList![index].image}',
                               fit: BoxFit.cover,
                             ),

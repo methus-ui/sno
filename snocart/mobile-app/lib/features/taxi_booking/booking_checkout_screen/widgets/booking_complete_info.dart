@@ -71,7 +71,7 @@ class BookingCompleteInfo extends StatelessWidget {
                     borderRadius:const BorderRadius.all(Radius.circular(8)),
                     child: CustomImage(
                       width: 120, height: 120,
-                      image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}',
+                      image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleImageUrl}/${vehicle.carImages!.isNotEmpty ? vehicle.carImages![0] : ''}',
                     ),
                   ),
                   const SizedBox(width: Dimensions.paddingSizeDefault),
@@ -86,7 +86,7 @@ class BookingCompleteInfo extends StatelessWidget {
                         children: [
                           CustomImage(
                             width: 20, height: 20,
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.vehicleBrandImageUrl}/${''}',
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.vehicleBrandImageUrl}/${''}',
                           ),
                           Text(vehicle.brandName!, style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeExtraSmall),)
                         ],

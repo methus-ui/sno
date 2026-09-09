@@ -241,11 +241,11 @@ class OrderInfoWidget extends StatelessWidget {
 
                   (order.refund != null && order.refund!.image != null && order.refund!.image!.isNotEmpty) ? InkWell(
                     onTap: () => showDialog(context: context, builder: (context) {
-                      return ImageDialogWidget(imageUrl: '${Get.find<SplashController>().configModel!.baseUrls!.refundImageUrl}/${order.refund!.image!.isNotEmpty ? order.refund!.image![0] : ''}');
+                      return ImageDialogWidget(imageUrl: '${Get.find<SplashController>().configModel?.baseUrls?.refundImageUrl}/${order.refund!.image!.isNotEmpty ? order.refund!.image![0] : ''}');
                     }),
                     child: CustomImage(
                       height: 40, width: 40, fit: BoxFit.cover,
-                      image: order.refund != null ? '${Get.find<SplashController>().configModel!.baseUrls!.refundImageUrl}/${order.refund!.image!.isNotEmpty ? order.refund!.image![0] : ''}' : '',
+                      image: order.refund != null ? '${Get.find<SplashController>().configModel?.baseUrls?.refundImageUrl}/${order.refund!.image!.isNotEmpty ? order.refund!.image![0] : ''}' : '',
                     ),
                   ) : const SizedBox(),
                 ]) : Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -331,11 +331,11 @@ class OrderInfoWidget extends StatelessWidget {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: InkWell(
-                        onTap: () => openDialog(context, '${Get.find<SplashController>().configModel!.baseUrls!.orderAttachmentUrl}/${order.orderAttachment![index]}'),
+                        onTap: () => openDialog(context, '${Get.find<SplashController>().configModel?.baseUrls?.orderAttachmentUrl}/${order.orderAttachment![index]}'),
                         child: Center(child: ClipRRect(
                           borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                           child: CustomImage(
-                            image: '${Get.find<SplashController>().configModel!.baseUrls!.orderAttachmentUrl}/${order.orderAttachment![index]}',
+                            image: '${Get.find<SplashController>().configModel?.baseUrls?.orderAttachmentUrl}/${order.orderAttachment![index]}',
                             width: 100, height: 100,
                           ),
                         )),
@@ -391,11 +391,11 @@ class OrderInfoWidget extends StatelessWidget {
                 return Padding(
                   padding: const EdgeInsets.only(right: 8),
                   child: InkWell(
-                    onTap: () => openDialog(context, '${Get.find<SplashController>().configModel!.baseUrls!.orderAttachmentUrl}/${order.orderProof![index]}'),
+                    onTap: () => openDialog(context, '${Get.find<SplashController>().configModel?.baseUrls?.orderAttachmentUrl}/${order.orderProof![index]}'),
                     child: Center(child: ClipRRect(
                       borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                       child: CustomImage(
-                        image: '${Get.find<SplashController>().configModel!.baseUrls!.orderAttachmentUrl}/${order.orderProof![index]}',
+                        image: '${Get.find<SplashController>().configModel?.baseUrls?.orderAttachmentUrl}/${order.orderProof![index]}',
                         width: 100, height: 100,
                       ),
                     )),
@@ -425,7 +425,7 @@ class OrderInfoWidget extends StatelessWidget {
               Row(children: [
 
                 ClipOval(child: CustomImage(
-                  image: '${Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl}/${order.deliveryMan!.image}',
+                  image: '${Get.find<SplashController>().configModel?.baseUrls?.deliveryManImageUrl}/${order.deliveryMan!.image}',
                   height: 35, width: 35, fit: BoxFit.cover,
                 )),
                 const SizedBox(width: Dimensions.paddingSizeSmall),
@@ -534,15 +534,15 @@ class OrderInfoWidget extends StatelessWidget {
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall)),
               )) : Row(children: [
                 ClipOval(child: CustomImage(
-                  image: parcel ? '${Get.find<SplashController>().configModel!.baseUrls!.parcelCategoryImageUrl}/${order.parcelCategory!.image}'
-                      : '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${order.store!.logo}',
+                  image: parcel ? '${Get.find<SplashController>().configModel?.baseUrls?.parcelCategoryImageUrl}/${order.parcelCategory?.image ?? ''}'
+                      : '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}/${order.store?.logo ?? ''}',
                   height: 35, width: 35, fit: BoxFit.cover,
                 )),
                 const SizedBox(width: Dimensions.paddingSizeSmall),
 
                 Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Text(
-                    parcel ? order.parcelCategory!.name! : order.store!.name!, maxLines: 1, overflow: TextOverflow.ellipsis,
+                    parcel ? (order.parcelCategory?.name ?? '') : (order.store?.name ?? ''), maxLines: 1, overflow: TextOverflow.ellipsis,
                     style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall),
                   ),
                   Text(
@@ -570,14 +570,14 @@ class OrderInfoWidget extends StatelessWidget {
                 (!parcel && order.orderStatus != 'delivered' && order.orderStatus != 'failed' && order.orderStatus != 'canceled' && order.orderStatus != 'refunded') ? InkWell(
                   onTap: () async {
                     await Get.toNamed(RouteHelper.getChatRoute(
-                      notificationBody: NotificationBodyModel(orderId: order.id, restaurantId: order.store!.vendorId),
-                      user: User(id: order.store!.vendorId, fName: order.store!.name, lName: '', image: order.store!.logo),
+                      notificationBody: NotificationBodyModel(orderId: order.id, restaurantId: order.store?.vendorId),
+                      user: User(id: order.store?.vendorId, fName: order.store?.name, lName: '', image: order.store?.logo),
                     ));
                   },
                   child: Image.asset(Images.chatOrderDetails, height: 20, width: 20),
                 ) : const SizedBox(),
 
-                !isGuestLoggedIn && (Get.find<SplashController>().configModel!.refundActiveStatus! && order.orderStatus == 'delivered' && !parcel
+                !isGuestLoggedIn && (Get.find<SplashController>().configModel?.refundActiveStatus == true && order.orderStatus == 'delivered' && !parcel
                 && (parcel || (orderController.orderDetails!.isNotEmpty && orderController.orderDetails![0].itemCampaignId == null))) ? InkWell(
                   onTap: () => Get.toNamed(RouteHelper.getRefundRequestRoute(order.id.toString())),
                   child: Container(

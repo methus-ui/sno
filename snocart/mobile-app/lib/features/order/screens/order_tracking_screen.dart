@@ -237,7 +237,7 @@ class OrderTrackingScreenState extends State<OrderTrackingScreen> {
             snippet: addressModel.address,
           ),
         ),
-        child:  GetPlatform.isWeb ? const Icon(Icons.location_on, size: 18) : _customMarker('${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}/${''}'),
+        child:  GetPlatform.isWeb ? const Icon(Icons.location_on, size: 18) : _customMarker('${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}/${''}'),
       )) : const SizedBox();*/
 
       ///store for normal order , but receiver for parcel order
@@ -259,7 +259,7 @@ class OrderTrackingScreenState extends State<OrderTrackingScreen> {
             snippet: store.address,
           ),
         ),
-        child: GetPlatform.isWeb ? const Icon(Icons.location_on, size: 18) : _customMarker('${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}/${store.logo}'),
+        child: GetPlatform.isWeb ? const Icon(Icons.location_on, size: 18) : _customMarker('${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}/${store.logo}'),
       )) : const SizedBox();*/
 
       deliveryMan != null ? _markers.add(Marker(
@@ -281,7 +281,7 @@ class OrderTrackingScreenState extends State<OrderTrackingScreen> {
             snippet: deliveryMan.location,
           ),
         ),
-        child: GetPlatform.isWeb ? const Icon(Icons.location_on, size: 18) : _customMarker('${Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl}/${deliveryMan.image}'),
+        child: GetPlatform.isWeb ? const Icon(Icons.location_on, size: 18) : _customMarker('${Get.find<SplashController>().configModel?.baseUrls?.deliveryManImageUrl}/${deliveryMan.image}'),
       )) : const SizedBox();*/
 
     }catch(_) {}

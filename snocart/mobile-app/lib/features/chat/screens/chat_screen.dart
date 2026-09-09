@@ -71,11 +71,11 @@ class _ChatScreenState extends State<ChatScreen> {
 
       String? baseUrl = '';
       if(widget.notificationBody!.adminId != null) {
-        baseUrl = Get.find<SplashController>().configModel!.baseUrls!.businessLogoUrl;
+        baseUrl = Get.find<SplashController>().configModel?.baseUrls?.businessLogoUrl;
       }else if(widget.notificationBody!.deliverymanId != null) {
-        baseUrl = Get.find<SplashController>().configModel!.baseUrls!.deliveryManImageUrl;
+        baseUrl = Get.find<SplashController>().configModel?.baseUrls?.deliveryManImageUrl;
       }else {
-        baseUrl = Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl;
+        baseUrl = Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl;
       }
 
       return PopScope(

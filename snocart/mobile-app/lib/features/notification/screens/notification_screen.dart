@@ -107,8 +107,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                             ClipOval(child: CustomImage(
                               isNotification: true,
                               height: 40, width: 40, fit: BoxFit.cover,
-                              image: '${Get.find<SplashController>().configModel!.baseUrls!.notificationImageUrl}'
-                                  '/${notificationController.notificationList![index].data!.image}',
+                              image: '${Get.find<SplashController>().configModel?.baseUrls?.notificationImageUrl}'
+                                  '/${notificationController.notificationList![index].data?.image ?? ''}',
                             )),
                             const SizedBox(width: Dimensions.paddingSizeSmall),
 

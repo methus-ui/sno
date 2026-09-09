@@ -156,7 +156,7 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                                     restaurantId: null,
                                     deliverymanId: null,
                                     conversationId: 0,
-                                    image: '${Get.find<SplashController>().configModel!.baseUrls!.businessLogoUrl}/${Get.find<SplashController>().configModel!.logo}',
+                                    image: '${Get.find<SplashController>().configModel?.baseUrls?.businessLogoUrl}/${Get.find<SplashController>().configModel!.logo}',
                                     name: '${Get.find<SplashController>().configModel!.businessName}',
                                     receiverType: 'admin',
                                   ),
@@ -178,7 +178,7 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
                                         child: Row(children: [
                                           ClipOval(child: CustomImage(
                                             height: 50, width: 50,
-                                            image: '${Get.find<SplashController>().configModel!.baseUrls!.businessLogoUrl}/${Get.find<SplashController>().configModel!.logo}',
+                                            image: '${Get.find<SplashController>().configModel?.baseUrls?.businessLogoUrl}/${Get.find<SplashController>().configModel!.logo}',
                                           )),
                                           const SizedBox(width: Dimensions.paddingSizeSmall),
 
@@ -299,7 +299,7 @@ class _WebChatViewWidgetState extends State<WebChatViewWidget> with TickerProvid
 
                               ClipOval(child: CustomImage(
                                 height: 50, width: 50,
-                                image: widget.chatController.notificationBody!.image!,
+                                image: widget.chatController.notificationBody?.image ?? '',
                               )),
                               const SizedBox(width: Dimensions.paddingSizeSmall),
 

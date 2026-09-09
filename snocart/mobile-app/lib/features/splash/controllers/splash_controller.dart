@@ -114,7 +114,10 @@ class SplashController extends GetxController implements GetxService {
   }
 
   void setCacheConfigModule(ModuleModel? cacheModule) {
-    _configModel!.moduleConfig!.module = Module.fromJson(_data!['module_config'][cacheModule!.moduleType]);
+    if (_configModel?.moduleConfig == null || cacheModule?.moduleType == null) {
+      return;
+    }
+    _configModel!.moduleConfig!.module = getModuleConfig(cacheModule!.moduleType);
   }
 
   bool? showIntro() {
@@ -133,8 +136,8 @@ class SplashController extends GetxController implements GetxService {
     _module = module;
     splashServiceInterface.setModule(module);
     if(module != null) {
-      if(_configModel != null) {
-        _configModel!.moduleConfig!.module = Module.fromJson(_data!['module_config'][module.moduleType]);
+      if(_configModel?.moduleConfig != null) {
+        _configModel!.moduleConfig!.module = getModuleConfig(module.moduleType);
       }
       await splashServiceInterface.setCacheModule(module);
       if((AuthHelper.isLoggedIn() || AuthHelper.isGuestLoggedIn()) && Get.find<SplashController>().cacheModule != null) {
@@ -152,9 +155,15 @@ class SplashController extends GetxController implements GetxService {
   }
 
   Module getModuleConfig(String? moduleType) {
-    Module module = Module.fromJson(_data!['module_config'][moduleType]);
-    moduleType == 'food' ? module.newVariation = true : module.newVariation = false;
-    return module;
+    try {
+      final dynamic cfg = _data?['module_config']?[moduleType];
+      if (cfg is Map<String, dynamic>) {
+        Module module = Module.fromJson(cfg);
+        module.newVariation = moduleType == 'food';
+        return module;
+      }
+    } catch (_) {}
+    return Module(newVariation: moduleType == 'food');
   }
 
   Future<void> getModules({Map<String, String>? headers}) async {

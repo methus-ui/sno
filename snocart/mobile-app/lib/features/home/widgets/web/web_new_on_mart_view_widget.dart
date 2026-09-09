@@ -95,7 +95,7 @@ class _WebNewOnMartViewWidgetState extends State<WebNewOnMartViewWidget> {
                 itemCount: storeList.length,
                 itemBuilder: (context, index){
                   double distance = Get.find<StoreController>().getRestaurantDistance(
-                    LatLng(double.parse(storeList[index].latitude!), double.parse(storeList[index].longitude!)),
+                    LatLng(double.tryParse(storeList[index].latitude ?? '') ?? 0, double.tryParse(storeList[index].longitude ?? '') ?? 0),
                   );
                   return Padding(
                     padding: EdgeInsets.only(
@@ -140,7 +140,7 @@ class _WebNewOnMartViewWidgetState extends State<WebNewOnMartViewWidget> {
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                         child: CustomImage(
-                                          image: '${Get.find<SplashController>().configModel!.baseUrls!.storeImageUrl}''/${storeList[index].logo}',
+                                          image: '${Get.find<SplashController>().configModel?.baseUrls?.storeImageUrl}''/${storeList[index].logo}',
                                           height: 90, width: 90, fit: BoxFit.cover,
                                         ),
                                       ),

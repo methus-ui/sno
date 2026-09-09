@@ -276,7 +276,7 @@ class SearchScreenState extends State<SearchScreen> with TickerProviderStateMixi
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                                 child: CustomImage(
-                                  image: '${Get.find<SplashController>().configModel!.baseUrls!.itemImageUrl}'
+                                  image: '${Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl}'
                                       '/${searchController.suggestedItemList![index].image}',
                                   width: 45, height: 45, fit: BoxFit.cover,
                                 ),

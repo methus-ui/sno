@@ -68,7 +68,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         return isLoggedIn ? profileController.userInfoModel != null ? ProfileBgWidget(
           backButton: true,
           circularImage: ImagePickerWidget(
-            image: '${Get.find<SplashController>().configModel!.baseUrls!.customerImageUrl}/${profileController.userInfoModel!.image}',
+            image: '${Get.find<SplashController>().configModel?.baseUrls?.customerImageUrl}/${profileController.userInfoModel!.image}',
             onTap: () => profileController.pickImage(), rawFile: profileController.rawFile,
           ),
           mainWidget: Column(children: [

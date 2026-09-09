@@ -107,23 +107,23 @@ class CartItemWidget extends StatelessWidget {
                       Row(children: [
                         Flexible(
                           child: Text(
-                            cart.item!.name!,
+                            cart.item?.name ?? '',
                             style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeSmall),
                             maxLines: 2, overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-                        ((Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! && cart.item!.unitType != null && !Get.find<SplashController>().getModuleConfig(cart.item!.moduleType).newVariation!)
-                        || (Get.find<SplashController>().configModel!.moduleConfig!.module!.vegNonVeg! && Get.find<SplashController>().configModel!.toggleVegNonVeg!)) ? Container(
+                        ((Get.find<SplashController>().configModel?.moduleConfig?.module?.unit == true && cart.item?.unitType != null && !(Get.find<SplashController>().getModuleConfig(cart.item?.moduleType).newVariation ?? false))
+                        || (Get.find<SplashController>().configModel?.moduleConfig?.module?.vegNonVeg == true && Get.find<SplashController>().configModel?.toggleVegNonVeg == true)) ? Container(
                           padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall, horizontal: Dimensions.paddingSizeSmall),
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
                             color: Theme.of(context).primaryColor.withOpacity(0.2),
                           ),
                           child: Text(
-                            Get.find<SplashController>().configModel!.moduleConfig!.module!.unit! ? cart.item!.unitType ?? ''
-                                : cart.item!.veg == 0 ? 'non_veg'.tr : 'veg'.tr,
+                            Get.find<SplashController>().configModel?.moduleConfig?.module?.unit == true ? cart.item?.unitType ?? ''
+                                : cart.item?.veg == 0 ? 'non_veg'.tr : 'veg'.tr,
                             style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeExtraSmall, color: Theme.of(context).primaryColor),
                           ),
                         ) : const SizedBox(),
@@ -268,7 +268,7 @@ class CartItemWidget extends StatelessWidget {
   String? _setupVariationText({required CartModel cart}) {
     String? variationText = '';
 
-    if(Get.find<SplashController>().getModuleConfig(cart.item!.moduleType).newVariation!) {
+    if(Get.find<SplashController>().getModuleConfig(cart.item?.moduleType).newVariation ?? false) {
       if(cart.foodVariations!.isNotEmpty) {
         for(int index=0; index<cart.foodVariations!.length; index++) {
           if(cart.foodVariations![index].contains(true)) {

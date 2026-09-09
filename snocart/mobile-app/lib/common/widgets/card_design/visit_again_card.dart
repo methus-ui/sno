@@ -51,7 +51,7 @@ class VisitAgainCard extends StatelessWidget {
               Icon(Icons.star, size: 15, color: Theme.of(context).primaryColor),
               const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
-              Text(store.avgRating!.toStringAsFixed(1), style: robotoRegular),
+              Text((store.avgRating ?? 0).toStringAsFixed(1), style: robotoRegular),
               const SizedBox(width: Dimensions.paddingSizeExtraSmall),
 
               Text("(${store.ratingCount})", style: robotoRegular.copyWith(fontSize: Dimensions.fontSizeSmall, color: Theme.of(context).disabledColor)),
@@ -77,7 +77,7 @@ class VisitAgainCard extends StatelessWidget {
               alignment: Alignment.center,
               height: 25, width: 200,
               child: ListView.builder(
-                itemCount: store.items!.length,
+                itemCount: (store.items ?? []).length,
                 scrollDirection: Axis.horizontal,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -89,12 +89,12 @@ class VisitAgainCard extends StatelessWidget {
                         ClipRRect(
                           borderRadius: BorderRadius.circular((isPharmacy || isFood) ? 100 : Dimensions.radiusSmall),
                           child: CustomImage(
-                            image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, store.items![index].image),
+                            image: buildImageUrl(Get.find<SplashController>().configModel?.baseUrls?.itemImageUrl, (store.items ?? [])[index].image),
                             fit: BoxFit.cover, height: 25, width: 25,
                           ),
                         ),
 
-                        index == store.items!.length -1 ? Positioned(
+                        index == (store.items ?? []).length -1 ? Positioned(
                           top: 0, left: 0,right: 0, bottom: 0,
                           child: Container(
                             decoration: BoxDecoration(
@@ -102,7 +102,7 @@ class VisitAgainCard extends StatelessWidget {
                               color: Colors.black.withOpacity(0.5),
                             ),
                             child: Center(child: Text(
-                              (store.itemCount! > 20) ? '20+' : '${store.itemCount}', style: robotoMedium.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeExtraSmall),
+                              ((store.itemCount ?? 0) > 20) ? '20+' : '${store.itemCount ?? 0}', style: robotoMedium.copyWith(color: Colors.white, fontSize: Dimensions.fontSizeExtraSmall),
                             )),
                           ),
                         ) : const SizedBox(),

@@ -349,8 +349,17 @@ class Refund {
     id = json['id'];
     orderId = json['order_id'];
     if(json['image'] != null){
-      image = [];
-      jsonDecode(json['image']).forEach((v) => image!.add(v));
+      try {
+        image = [];
+        final dynamic decoded = json['image'] is String ? jsonDecode(json['image']) : json['image'];
+        if (decoded is List) {
+          for (final v in decoded) {
+            image!.add(v.toString());
+          }
+        }
+      } catch (_) {
+        image = [];
+      }
     }
     customerReason = json['customer_reason'];
     customerNote = json['customer_note'];
