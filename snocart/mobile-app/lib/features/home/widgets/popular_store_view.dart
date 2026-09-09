@@ -317,7 +317,9 @@ class PopularStoreShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return SizedBox(
+      height: 150,
+      child: ListView.builder(
       shrinkWrap: true,
       physics: const BouncingScrollPhysics(),
       scrollDirection: Axis.horizontal,
@@ -370,6 +372,7 @@ class PopularStoreShimmer extends StatelessWidget {
           ),
         );
       },
-    );
+    ),
+  );
   }
 }
