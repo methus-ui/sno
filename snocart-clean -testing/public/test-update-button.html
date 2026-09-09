@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Button Diagnostic</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Update Button Diagnostic</h1>
+    <div id="results"></div>
+
+    <script>
+        let results = [];
+
+        function log(message, status = 'info') {
+            results.push(`<p style="color: ${status === 'error' ? 'red' : status === 'success' ? 'green' : 'black'}">${message}</p>`);
+            document.getElementById('results').innerHTML = results.join('');
+        }
+
+        // Test 1: jQuery loaded?
+        if (typeof jQuery !== 'undefined') {
+            log('✅ jQuery is loaded (version ' + jQuery.fn.jquery + ')', 'success');
+        } else {
+            log('❌ jQuery is NOT loaded', 'error');
+        }
+
+        // Test 2: Can we access the edit page?
+        fetch('/store-panel/item/edit/147762')
+            .then(response => {
+                if (response.ok) {
+                    log('✅ Edit page is accessible', 'success');
+                    return response.text();
+                } else {
+                    log('❌ Edit page returned status: ' + response.status, 'error');
+                    throw new Error('Page not accessible');
+                }
+            })
+            .then(html => {
+                // Test 3: Check if form exists
+                if (html.includes('id="product_form"')) {
+                    log('✅ Form with id="product_form" exists', 'success');
+                } else {
+                    log('❌ Form with id="product_form" NOT found', 'error');
+                }
+
+                // Test 4: Check if new code exists
+                if (html.includes('e.preventDefault()')) {
+                    log('✅ NEW JavaScript code is present (e.preventDefault found)', 'success');
+                } else {
+                    log('❌ OLD JavaScript code (e.preventDefault NOT found) - BROWSER CACHE ISSUE!', 'error');
+                    log('🔧 Solution: Press Ctrl+Shift+R to hard refresh', 'info');
+                }
+
+                // Test 5: Check if submit handler exists
+                if (html.includes("$('#product_form').on('submit'")) {
+                    log('✅ Form submit handler exists', 'success');
+                } else {
+                    log('❌ Form submit handler NOT found', 'error');
+                }
+
+                // Test 6: Check for loading div
+                if (html.includes('id="loading"')) {
+                    log('✅ Loading div exists', 'success');
+                } else {
+                    log('❌ Loading div NOT found', 'error');
+                }
+            })
+            .catch(error => {
+                log('❌ Error: ' + error.message, 'error');
+            });
+    </script>
+</body>
+</html>

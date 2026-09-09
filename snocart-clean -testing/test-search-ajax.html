@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search AJAX Test</title>
+    <meta name="csrf-token" content="test">
+</head>
+<body>
+    <h2>Search AJAX Test</h2>
+    <input type="text" id="searchInput" placeholder="Type 'customer' and press Enter">
+    <div id="result"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#searchInput').on('keypress', function(e) {
+            if (e.which === 13) {
+                var keyword = $(this).val();
+                $('#result').html('Searching for: ' + keyword + '...');
+                
+                $.ajax({
+                    url: '/admin/search-routing',
+                    type: 'POST',
+                    data: {
+                        search: keyword,
+                        _token: 'TEST'
+                    },
+                    success: function(response) {
+                        console.log('Response:', response);
+                        console.log('Type:', typeof response);
+                        console.log('Length:', response.length);
+                        $('#result').html('<pre>' + JSON.stringify(response, null, 2) + '</pre>');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                        console.error('Response:', xhr.responseText);
+                        $('#result').html('ERROR: ' + error + '<br>Status: ' + xhr.status + '<br>Response: ' + xhr.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

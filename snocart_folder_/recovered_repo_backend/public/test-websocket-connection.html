@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Connection Test</title>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #1e293b; color: white; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .log { background: #0f172a; padding: 15px; border-radius: 8px; margin: 10px 0; font-family: monospace; font-size: 12px; max-height: 400px; overflow-y: auto; }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .info { color: #3b82f6; }
+        .warning { color: #f59e0b; }
+        input { padding: 10px; width: 200px; margin: 5px; border-radius: 4px; border: 1px solid #334155; }
+        button { padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #2563eb; }
+        .status { padding: 10px; border-radius: 8px; margin: 10px 0; }
+        .status.connected { background: #065f46; border: 2px solid #10b981; }
+        .status.disconnected { background: #7f1d1d; border: 2px solid #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 WebSocket Connection Debugger</h1>
+
+        <div class="status disconnected" id="status">
+            <h2>Status: Disconnected</h2>
+            <p id="statusText">Waiting to connect...</p>
+        </div>
+
+        <div>
+            <h3>Test Settings:</h3>
+            <label>Delivery Man ID: <input type="number" id="dmId" value="1" placeholder="Enter DM ID"></label><br>
+            <label>Pusher Key: <input type="text" id="pusherKey" value="80236ec36aada60a8520" placeholder="Pusher App Key"></label><br>
+            <label>Cluster: <input type="text" id="pusherCluster" value="us2" placeholder="Cluster"></label><br>
+            <button onclick="connectWebSocket()">🔌 Connect WebSocket</button>
+            <button onclick="clearLog()">🗑️ Clear Log</button>
+        </div>
+
+        <div class="log" id="log">
+            <div class="info">Console log will appear here...</div>
+        </div>
+    </div>
+
+    <script>
+        let pusher = null;
+        let channel = null;
+        let updateCount = 0;
+
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const className = type; // success, error, info, warning
+            logDiv.innerHTML += `<div class="${className}">[${time}] ${message}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function updateStatus(connected, text) {
+            const statusDiv = document.getElementById('status');
+            const statusText = document.getElementById('statusText');
+
+            if (connected) {
+                statusDiv.className = 'status connected';
+                statusDiv.querySelector('h2').textContent = 'Status: ✅ Connected';
+            } else {
+                statusDiv.className = 'status disconnected';
+                statusDiv.querySelector('h2').textContent = 'Status: ❌ Disconnected';
+            }
+
+            statusText.textContent = text;
+        }
+
+        function connectWebSocket() {
+            const dmId = document.getElementById('dmId').value;
+            const pusherKey = document.getElementById('pusherKey').value;
+            const pusherCluster = document.getElementById('pusherCluster').value;
+
+            if (!dmId || !pusherKey) {
+                log('❌ Please enter Delivery Man ID and Pusher Key', 'error');
+                return;
+            }
+
+            log('🔌 Initializing WebSocket connection...', 'info');
+            log(`📍 DM ID: ${dmId}`, 'info');
+            log(`🔑 Pusher Key: ${pusherKey}`, 'info');
+            log(`🌍 Cluster: ${pusherCluster}`, 'info');
+
+            try {
+                // Initialize Pusher
+                pusher = new Pusher(pusherKey, {
+                    cluster: pusherCluster,
+                    forceTLS: true,
+                    enabledTransports: ['ws', 'wss'],
+                    disableStats: true
+                });
+
+                log('✅ Pusher instance created', 'success');
+
+                // Connection events
+                pusher.connection.bind('connecting', function() {
+                    log('🔄 Connecting to Pusher...', 'info');
+                    updateStatus(false, 'Connecting to Pusher servers...');
+                });
+
+                pusher.connection.bind('connected', function() {
+                    log('✅ CONNECTED to Pusher!', 'success');
+                    log(`📡 Socket ID: ${pusher.connection.socket_id}`, 'success');
+                    updateStatus(true, `Connected! Socket ID: ${pusher.connection.socket_id}`);
+                });
+
+                pusher.connection.bind('unavailable', function() {
+                    log('❌ Connection unavailable', 'error');
+                    updateStatus(false, 'Connection unavailable');
+                });
+
+                pusher.connection.bind('failed', function() {
+                    log('❌ Connection FAILED', 'error');
+                    updateStatus(false, 'Connection failed');
+                });
+
+                pusher.connection.bind('disconnected', function() {
+                    log('⚠️ Disconnected from Pusher', 'warning');
+                    updateStatus(false, 'Disconnected');
+                });
+
+                pusher.connection.bind('error', function(error) {
+                    log('❌ Connection Error: ' + JSON.stringify(error), 'error');
+                    updateStatus(false, 'Connection error: ' + error.error.data.message);
+                });
+
+                // Subscribe to channel
+                const channelName = 'delivery-man.' + dmId;
+                log(`📡 Subscribing to channel: ${channelName}`, 'info');
+
+                channel = pusher.subscribe(channelName);
+
+                channel.bind('pusher:subscription_succeeded', function() {
+                    log('✅ Successfully subscribed to channel!', 'success');
+                    log('👂 Listening for "location.updated" events...', 'info');
+                });
+
+                channel.bind('pusher:subscription_error', function(error) {
+                    log('❌ Subscription Error: ' + JSON.stringify(error), 'error');
+                });
+
+                // Listen for location updates
+                channel.bind('location.updated', function(data) {
+                    updateCount++;
+                    log('🎉 === LOCATION UPDATE RECEIVED === #' + updateCount, 'success');
+                    log('📍 Delivery Man ID: ' + data.delivery_man_id, 'success');
+                    log('📍 Latitude: ' + data.location.latitude, 'success');
+                    log('📍 Longitude: ' + data.location.longitude, 'success');
+                    log('🚀 Speed: ' + data.location.speed + ' km/h', 'success');
+                    log('📍 Location: ' + (data.location.location || 'N/A'), 'success');
+                    log('⏰ Timestamp: ' + data.location.timestamp, 'success');
+                    log('═══════════════════════════════════', 'success');
+
+                    updateStatus(true, `Connected - ${updateCount} updates received`);
+                });
+
+                // Bind to all events for debugging
+                channel.bind_global(function(event, data) {
+                    if (!event.startsWith('pusher:')) {
+                        log('📨 Event received: ' + event, 'info');
+                        log('📦 Data: ' + JSON.stringify(data), 'info');
+                    }
+                });
+
+                log('✅ WebSocket setup complete!', 'success');
+                log('⏳ Waiting for location updates from DM #' + dmId + '...', 'info');
+
+            } catch (e) {
+                log('❌ Exception: ' + e.message, 'error');
+                console.error(e);
+            }
+        }
+
+        // Auto-connect on page load
+        window.addEventListener('load', function() {
+            log('🚀 WebSocket Test Page Loaded', 'info');
+            log('📝 Instructions:', 'info');
+            log('1. Enter Delivery Man ID', 'info');
+            log('2. Click "Connect WebSocket"', 'info');
+            log('3. Have DM move with mobile app', 'info');
+            log('4. Watch for location updates here', 'info');
+            log('', 'info');
+        });
+    </script>
+</body>
+</html>

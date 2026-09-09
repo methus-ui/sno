@@ -1,0 +1,83 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: snocart_pos_db
+    environment:
+      POSTGRES_DB: odoo_pos
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo_secure_password_2024
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/pgdata
+    networks:
+      - snocart_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  odoo:
+    image: odoo:17.0
+    container_name: snocart_pos_odoo
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "8069:8069"
+      - "8072:8072"
+    environment:
+      - HOST=postgres
+      - USER=odoo
+      - PASSWORD=odoo_secure_password_2024
+      - DB_NAME=odoo_pos
+    volumes:
+      - odoo_data:/var/lib/odoo
+      - ./addons:/mnt/extra-addons
+      - ./config/odoo.conf:/etc/odoo/odoo.conf:ro
+    networks:
+      - snocart_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8069/web/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
+    command: ["--config=/etc/odoo/odoo.conf", "-i", "base,web,point_of_sale", "--without-demo=all", "--stop-after-init"]
+
+  sync_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+    container_name: snocart_pos_sync
+    depends_on:
+      odoo:
+        condition: service_healthy
+    environment:
+      - SNOCART_API_URL=${SNOCART_API_URL}
+      - SNOCART_API_KEY=${SNOCART_API_KEY}
+      - ODOO_URL=http://odoo:8069
+      - ODOO_DB=odoo_pos
+      - ODOO_USERNAME=admin
+      - ODOO_PASSWORD=${ODOO_ADMIN_PASSWORD}
+      - SYNC_INTERVAL=300
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./logs:/app/logs
+      - ./config/sync_config.json:/app/config.json:ro
+    networks:
+      - snocart_network
+    restart: unless-stopped
+    command: ["python", "-u", "snocart_sync_service.py", "--config", "/app/config.json"]
+
+networks:
+  snocart_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  odoo_data:
+    driver: local

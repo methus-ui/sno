@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parent Page Test</title>
+</head>
+<body>
+    <h1>Testing Parent Window JavaScript</h1>
+    <div id="output"></div>
+    
+    <script>
+        console.log('🔥 PARENT SCRIPT IS RUNNING');
+        document.getElementById('output').innerHTML = '<p style="color: green;">✅ JavaScript is executing!</p>';
+        
+        // Test data like our blade template
+        const chatData = {
+            token: 'TEST_TOKEN_123',
+            adminName: 'Test Admin',
+            expiresAt: new Date().toISOString()
+        };
+        
+        console.log('📦 Chat data:', chatData);
+        console.log('✅ Parent page JavaScript works!');
+    </script>
+</body>
+</html>

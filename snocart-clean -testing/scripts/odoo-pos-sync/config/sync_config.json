@@ -1,0 +1,9 @@
+{
+  "api_url": "https://new.snocart.com",
+  "api_key": "PNuN0aRI6k7G87Zf0Gkbvw5sTXu04d10Mf1iOl0SdyzfevLggmlfOBayInj9tOog",
+  "db_host": "postgres",
+  "db_port": "5432",
+  "db_name": "odoo_pos",
+  "db_user": "odoo",
+  "db_password": "odoo_secure_password_2024"
+}

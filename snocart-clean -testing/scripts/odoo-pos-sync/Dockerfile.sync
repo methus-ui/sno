@@ -1,0 +1,38 @@
+FROM python:3.11-slim
+
+LABEL maintainer="Snocart <support@snocart.com>"
+LABEL description="Snocart POS Sync Service - Syncs local Odoo POS with Snocart Cloud"
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    postgresql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy sync service code
+COPY snocart_sync_service.py .
+
+# Create logs directory
+RUN mkdir -p /app/logs
+
+# Create non-root user for security
+RUN useradd -m -u 1000 syncuser && \
+    chown -R syncuser:syncuser /app
+
+USER syncuser
+
+# Health check
+HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
+    CMD python -c "import sys; sys.exit(0)"
+
+# Run sync service
+CMD ["python", "-u", "snocart_sync_service.py"]
