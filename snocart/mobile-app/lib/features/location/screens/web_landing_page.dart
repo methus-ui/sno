@@ -368,30 +368,30 @@ class _WebLandingPageState extends State<WebLandingPage> {
             SizedBox(height: AppConstants.whyChooseUsList.isNotEmpty ? 40 : 0),
 
             RegistrationCardWidget(isStore: true, splashController: splashController),
-            SizedBox(height: splashController.landingModel != null && (splashController.landingModel!.downloadUserAppLinks!.playstoreUrlStatus == '1' || splashController.landingModel!.downloadUserAppLinks!.appleStoreUrlStatus == '1')
+            SizedBox(height: splashController.landingModel?.downloadUserAppLinks?.playstoreUrlStatus == '1' || splashController.landingModel?.downloadUserAppLinks?.appleStoreUrlStatus == '1'
                 ? 40 : 0),
 
-            splashController.landingModel != null && (splashController.landingModel!.downloadUserAppLinks!.playstoreUrlStatus == '1' || splashController.landingModel!.downloadUserAppLinks!.appleStoreUrlStatus == '1')
+            splashController.landingModel?.downloadUserAppLinks?.playstoreUrlStatus == '1' || splashController.landingModel?.downloadUserAppLinks?.appleStoreUrlStatus == '1'
             ? Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
               CustomImage(
-                image: '${splashController.landingModel!.baseUrls!.downloadUserAppImage!}/${splashController.landingModel!.downloadUserAppImage}',
+                image: '${splashController.landingModel?.baseUrls?.downloadUserAppImage ?? ''}/${splashController.landingModel?.downloadUserAppImage}',
                 width: 500,
               ),
               Column(children: [
                 Text(
-                  splashController.landingModel!.downloadUserAppTitle ?? '', textAlign: TextAlign.center,
+                  splashController.landingModel?.downloadUserAppTitle ?? '', textAlign: TextAlign.center,
                   style: robotoBold.copyWith(fontSize: Dimensions.fontSizeExtraLarge),
                 ),
                 const SizedBox(height: Dimensions.paddingSizeSmall),
 
                 Text(
-                  splashController.landingModel!.downloadUserAppSubTitle ?? '', textAlign: TextAlign.center,
+                  splashController.landingModel?.downloadUserAppSubTitle ?? '', textAlign: TextAlign.center,
                   style: robotoRegular.copyWith(color: Theme.of(context).disabledColor, fontSize: Dimensions.fontSizeSmall),
                 ),
                 const SizedBox(height: Dimensions.paddingSizeLarge),
 
                 Row(children: [
-                  splashController.landingModel != null && splashController.landingModel!.downloadUserAppLinks!.playstoreUrlStatus == '1' ? InkWell(
+                  splashController.landingModel?.downloadUserAppLinks?.playstoreUrlStatus == '1' ? InkWell(
                     onTap: () async {
                       String url = splashController.landingModel?.downloadUserAppLinks?.playstoreUrl ?? '';
                       if(await canLaunchUrlString(url)){
@@ -400,12 +400,12 @@ class _WebLandingPageState extends State<WebLandingPage> {
                     },
                     child: Image.asset(Images.landingGooglePlay, height: 45),
                   ) : const SizedBox(),
-                  SizedBox(width: splashController.landingModel != null && (splashController.landingModel!.downloadUserAppLinks!.playstoreUrlStatus == '1' && splashController.landingModel!.downloadUserAppLinks!.appleStoreUrlStatus == '1')
+                  SizedBox(width: splashController.landingModel?.downloadUserAppLinks?.playstoreUrlStatus == '1' && splashController.landingModel?.downloadUserAppLinks?.appleStoreUrlStatus == '1'
                       ? Dimensions.paddingSizeLarge : 0),
 
-                  splashController.landingModel != null && splashController.landingModel!.downloadUserAppLinks!.appleStoreUrlStatus == '1' ? InkWell(
+                  splashController.landingModel?.downloadUserAppLinks?.appleStoreUrlStatus == '1' ? InkWell(
                     onTap: () async {
-                      String url = splashController.landingModel!.downloadUserAppLinks!.appleStoreUrl ?? '';
+                      String url = splashController.landingModel?.downloadUserAppLinks?.appleStoreUrl ?? '';
                       if(await canLaunchUrlString(url)){
                         launchUrlString(url);
                       }
@@ -428,12 +428,17 @@ class _WebLandingPageState extends State<WebLandingPage> {
 
   List<Widget> _generateChooseUsList(SplashController splashController) {
     List<Widget> chooseUsList = [];
-    for(int index=0; index < (splashController.landingModel != null && splashController.landingModel!.specialCriterias!.length > 4 ? 4 : splashController.landingModel!.specialCriterias!.length); index++) {
+    final List? criterias = splashController.landingModel?.specialCriterias;
+    if(criterias == null || criterias.isEmpty) {
+      return chooseUsList;
+    }
+    final int total = criterias.length > 4 ? 4 : criterias.length;
+    for(int index=0; index < total; index++) {
       chooseUsList.add(Expanded(child: Row(children: [
-        Expanded(child: LandingCardWidget(icon: '${splashController.landingModel!.baseUrls!.specialCriteriaImage}/${splashController.landingModel!.specialCriterias![index].image}',
-            title: splashController.landingModel!.specialCriterias![index].title ?? '',
+        Expanded(child: LandingCardWidget(icon: '${splashController.landingModel?.baseUrls?.specialCriteriaImage ?? ''}/${criterias[index].image}',
+            title: criterias[index].title ?? '',
         )),
-        SizedBox(width: index != splashController.landingModel!.specialCriterias!.length-1 ? 30 : 0),
+        SizedBox(width: index != criterias.length-1 ? 30 : 0),
       ])));
     }
     return chooseUsList;
