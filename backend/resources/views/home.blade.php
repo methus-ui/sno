@@ -6,20 +6,20 @@
   <title>Grocery Delivery App in Kashmir | 25-Min Delivery in Srinagar - Snocart</title>
   <meta name="description" content="Snocart is the leading grocery delivery app in Kashmir offering superfast 25-minute grocery delivery in Srinagar. Order online from local kirana stores. AI-powered, community-focused." />
   <meta name="keywords" content="grocery delivery app kashmir, online grocery delivery srinagar, grocery delivery srinagar, grocery app kashmir, 25 minute grocery delivery, quick commerce kashmir, kirana delivery app, local grocery delivery srinagar, instant grocery delivery kashmir" />
-  <link rel="canonical" href="https://new.snocart.com" />
+  <link rel="canonical" href="{{ url('/') }}" />
   
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://new.snocart.com" />
+  <meta property="og:url" content="{{ url('/') }}" />
   <meta property="og:title" content="Grocery Delivery App in Kashmir | 25-Min Delivery in Srinagar - Snocart" />
   <meta property="og:description" content="AI-powered grocery delivery app in Kashmir. Get groceries delivered in 25 minutes from local kirana stores in Srinagar. Supporting local communities." />
-  <meta property="og:image" content="https://new.snocart.com/storage/app/public/business/2025-05-08-681bb7e7462a1.png" />
+  <meta property="og:image" content="{{ url('/') }}/storage/app/public/business/2025-05-08-681bb7e7462a1.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Grocery Delivery App in Kashmir | Snocart" />
   <meta name="twitter:description" content="Kashmir's fastest grocery delivery app. 25-minute delivery in Srinagar from local stores." />
   
   <!-- Favicon -->
-  <link rel="icon" href="https://new.snocart.com/storage/app/public/business/2025-05-08-681bb7e7462a1.png" />
+  <link rel="icon" href="{{ url('/') }}/storage/app/public/business/2025-05-08-681bb7e7462a1.png" />
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1320,7 +1320,7 @@
     <div class="container">
       <nav class="nav">
         <a href="#" class="logo" aria-label="Snocart - Grocery Delivery App in Kashmir">
-          <img src="https://new.snocart.com/storage/app/public/business/2025-05-08-681bb7e7462a1.png" alt="Snocart - Best Grocery Delivery App in Kashmir" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27%3E%3Crect fill=%27%23d61b66%27 width=%2780%27 height=%2780%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27white%27 font-family=%27Arial%27%3ES%3C/text%3E%3C/svg%3E'">
+          <img src="{{ url('/') }}/storage/app/public/business/2025-05-08-681bb7e7462a1.png" alt="Snocart - Best Grocery Delivery App in Kashmir" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2780%27 height=%2780%27%3E%3Crect fill=%27%23d61b66%27 width=%2780%27 height=%2780%27/%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-size=%2730%27 fill=%27white%27 font-family=%27Arial%27%3ES%3C/text%3E%3C/svg%3E'">
         </a>
         
         <div class="nav-links">
@@ -1336,10 +1336,10 @@
               <i class="fas fa-chevron-down" style="font-size: 10px; margin-left: 4px;"></i>
             </a>
             <div class="signup-dropdown-menu">
-              <a href="https://new.snocart.com/deliveryman/apply">
+              <a href="{{ url('deliveryman/apply') }}">
                 <i class="fas fa-motorcycle"></i> As Delivery Boy
               </a>
-              <a href="https://new.snocart.com/store/apply">
+              <a href="{{ url('store/apply') }}">
                 <i class="fas fa-store"></i> As Partner
               </a>
             </div>

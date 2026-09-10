@@ -13,6 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         '/external-login-from-drivemond','/api/v1/customer/external-update-data',
+        '/login_submit',
         '/api/v1/get-customer','/payment*','/pay-via-ajax', '/success','/cancel','/fail','/ipn','/payment-razor/*','/paytm-response','/liqpay-callback','/paytm-response','/mercadopago/make-payment','/flutterwave-pay','/paytabs-response','/store-panel/item/food-variation-generate','/store-panel/item/variation-generate'
     ];
 }

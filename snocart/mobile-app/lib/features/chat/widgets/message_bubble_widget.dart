@@ -77,13 +77,13 @@ class MessageBubbleWidget extends StatelessWidget {
                       child: InkWell(
                         hoverColor: Colors.transparent,
                         onTap: () => showDialog(context: context, builder: (context) {
-                          return ImageDialogWidget(imageUrl: '${baseUrl.chatImageUrl}/${message.files![index]}');
+                          return ImageDialogWidget(imageUrl: '${baseUrl?.chatImageUrl ?? ''}/${message.files![index]}');
                         }),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(Dimensions.paddingSizeSmall),
                           child: CustomImage(
                             height: 100, width: 100, fit: BoxFit.cover,
-                            image: '${baseUrl.chatImageUrl}/${message.files![index]}',
+                            image: '${baseUrl?.chatImageUrl ?? ''}/${message.files![index]}',
                           ),
                         ),
                       ),
@@ -150,7 +150,7 @@ class MessageBubbleWidget extends StatelessWidget {
                         return  message.files!.isNotEmpty ?
                         InkWell(
                           onTap: () => showDialog(context: context, builder: (context) {
-                            return ImageDialogWidget(imageUrl: '${baseUrl.chatImageUrl}/${message.files![index]}');
+                            return ImageDialogWidget(imageUrl: '${baseUrl?.chatImageUrl ?? ''}/${message.files![index]}');
                           }),
                           child: Padding(
                             padding: EdgeInsets.only(
