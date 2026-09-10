@@ -94,12 +94,13 @@ class ConfigController extends Controller
         $landing_page_links['app_url_ios'] = data_get($DataSetting, 'apple_store_url', null);
 
         $currency_symbol = Cache::rememberForever("business_settings_currency_symbol", function () {
-            return Currency::where(['currency_code' => Helpers::currency_code()])->first()->currency_symbol;
+            // Guard against a missing/misconfigured currency row so /api/v1/config never 500s.
+            return Currency::where(['currency_code' => Helpers::currency_code()])->first()?->currency_symbol ?? '$';
         });
-        $cod = json_decode($settings['cash_on_delivery'], true);
-        $digital_payment = json_decode($settings['digital_payment'], true);
+        $cod = json_decode($settings['cash_on_delivery'] ?? '{"status":0}', true) ?? ['status' => 0];
+        $digital_payment = json_decode($settings['digital_payment'] ?? '{"status":0}', true) ?? ['status' => 0];
         $default_location = isset($settings['default_location']) ? json_decode($settings['default_location'], true) : 0;
-        $free_delivery_over = $settings['free_delivery_over'];
+        $free_delivery_over = $settings['free_delivery_over'] ?? null;
         $free_delivery_over = isset($free_delivery_over) ? (float)$free_delivery_over : $free_delivery_over;
         $additional_charge = isset($settings['additional_charge']) ? (float)$settings['additional_charge'] : 0;
 

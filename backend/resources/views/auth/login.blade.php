@@ -852,47 +852,7 @@
                     @endif
                 </div>
 
-                @php($recaptcha = \App\CentralLogics\Helpers::get_business_settings('recaptcha'))
-                @if(isset($recaptcha) && $recaptcha['status'] == 1)
-                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-                    <input type="hidden" name="set_default_captcha" id="set_default_captcha_value" value="0">
-                    <div class="captcha-box d-none" id="reload-captcha">
-                        <div class="captcha-row">
-                            <input
-                                type="text"
-                                class="form-input"
-                                name="custome_recaptcha"
-                                id="custome_recaptcha"
-                                placeholder="{{translate('Enter captcha')}}"
-                                autocomplete="off"
-                                value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}"
-                            >
-                            <div class="captcha-image">
-                                <img src="<?php echo $custome_recaptcha ? $custome_recaptcha->inline() : ''; ?>" alt="captcha">
-                                <span class="refresh-captcha reloadCaptcha"><i class="tio-cached"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                @else
-                    <div class="captcha-box" id="reload-captcha">
-                        <div class="captcha-row">
-                            <input
-                                type="text"
-                                class="form-input"
-                                name="custome_recaptcha"
-                                id="custome_recaptcha"
-                                required
-                                placeholder="{{translate('Enter captcha')}}"
-                                autocomplete="off"
-                                value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}"
-                            >
-                            <div class="captcha-image">
-                                <img src="<?php echo $custome_recaptcha ? $custome_recaptcha->inline() : ''; ?>" alt="captcha">
-                                <span class="refresh-captcha reloadCaptcha"><i class="tio-cached"></i></span>
-                            </div>
-                        </div>
-                    </div>
-                @endif
+                {{-- Captcha disabled: login proceeds directly without any captcha/reCAPTCHA challenge --}}
 
                 <button type="submit" class="btn-submit" id="signInBtn">
                     <div class="btn-spinner"></div>
@@ -1045,11 +1005,9 @@
                 }
             });
 
-            // Form submission with loading state (skipped when reCAPTCHA handler manages it)
+            // Form submission with loading state (captcha disabled — always submit directly)
             $('#form-id').on('submit', function() {
-                if ($('#set_default_captcha_value').length === 0 || $('#set_default_captcha_value').val() === '1') {
-                    $('#signInBtn').addClass('loading').prop('disabled', true);
-                }
+                $('#signInBtn').addClass('loading').prop('disabled', true);
             });
 
             // Keyboard shortcut (Enter key)
@@ -1065,64 +1023,8 @@
             });
         });
 
-        // Refresh captcha
-        $(document).on('click', '.reloadCaptcha', function() {
-            $.ajax({
-                url: "{{ route('reload-captcha') }}",
-                type: "GET",
-                dataType: 'json',
-                beforeSend: function() { $('.refresh-captcha').addClass('active'); },
-                success: function(data) { $('#reload-captcha').html(data.view); },
-                complete: function() { $('.refresh-captcha').removeClass('active'); }
-            });
-        });
+        // Captcha disabled — reload-captcha handler removed.
     </script>
-
-    @if(isset($recaptcha) && $recaptcha['status'] == 1)
-        <script src="https://www.google.com/recaptcha/api.js?render={{$recaptcha['site_key']}}"></script>
-        <script>
-            $('#form-id').on('submit', function(e) {
-                // Custom captcha already active — let the form submit normally
-                if ($('#set_default_captcha_value').val() == '1') {
-                    return;
-                }
-
-                // Intercept to inject reCAPTCHA token first
-                e.preventDefault();
-                $('#signInBtn').addClass('loading').prop('disabled', true);
-
-                // reCAPTCHA failed to load — fall back to custom captcha
-                if (typeof grecaptcha === 'undefined') {
-                    $('#reload-captcha').removeClass('d-none').addClass('animated fadeIn');
-                    $('#custome_recaptcha').prop('required', true);
-                    $('#set_default_captcha_value').val('1');
-                    toastr.info('{{translate('complete_verification_below')}}', '{{translate('verification_required')}}', {
-                        CloseButton: true,
-                        ProgressBar: true
-                    });
-                    $('#signInBtn').removeClass('loading').prop('disabled', false);
-                    return;
-                }
-
-                // Execute reCAPTCHA and submit with token
-                grecaptcha.ready(function() {
-                    grecaptcha.execute('{{$recaptcha['site_key']}}', {action: 'submit'}).then(function(token) {
-                        if (!token) {
-                            $('#signInBtn').removeClass('loading').prop('disabled', false);
-                            toastr.error('{{translate('Google reCAPTCHA returned an empty token. Please check your site key configuration.')}}', '{{translate('reCAPTCHA Error')}}', {CloseButton: true});
-                            return;
-                        }
-                        $('#g-recaptcha-response').val(token);
-                        document.getElementById('form-id').submit();
-                    }).catch(function(err) {
-                        $('#signInBtn').removeClass('loading').prop('disabled', false);
-                        console.error('reCAPTCHA execute failed:', err);
-                        toastr.error('{{translate('Google reCAPTCHA failed. Ensure your site key is a v3 key registered for this domain.')}}', '{{translate('reCAPTCHA Error')}}', {CloseButton: true, timeOut: 8000});
-                    });
-                });
-            });
-        </script>
-    @endif
 
     @if(env('APP_MODE')=='demo')
         <script>
