@@ -5,7 +5,6 @@ import 'package:sixam_mart/api/api_checker.dart';
 import 'package:sixam_mart/features/address/domain/models/address_model.dart';
 import 'package:sixam_mart/common/models/error_response.dart';
 import 'package:sixam_mart/common/models/module_model.dart';
-import 'package:sixam_mart/helper/responsive_helper.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -235,16 +234,22 @@ class ApiClient extends GetxService {
     }
     if (kDebugMode) {
       print('====> API Response: [${response0.statusCode}] $uri');
-      if (!ResponsiveHelper.isWeb() || response.statusCode != 500) {
-        print('${response0.body}');
+      // Always print the body: on web the 500 body used to be suppressed, hiding
+      // the actual server error. Truncate very long (HTML) error pages.
+      String bodyText = '${response0.body}';
+      if (bodyText.length > 1500) {
+        bodyText = '${bodyText.substring(0, 1500)}... (truncated)';
       }
+      print(bodyText);
     }
     if (handleError) {
       if (response0.statusCode == 200) {
         return response0;
       } else {
         ApiChecker.checkApi(response0);
-        return const Response();
+        // Return the original response (not an empty one) so callers can read
+        // the real statusCode/statusText (e.g. splash screen error handling).
+        return response0;
       }
     } else {
       return response0;
