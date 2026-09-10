@@ -11,7 +11,7 @@ use Illuminate\Http\Request;
 use App\CentralLogics\Helpers;
 use App\Models\BusinessSetting;
 use App\Models\AdminTestimonial;
-use Gregwar\Captcha\CaptchaBuilder;
+// Captcha generation removed
 use App\Models\AdminSpecialCriteria;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\File;
@@ -207,9 +207,8 @@ class HomeController extends Controller
         $landing_integration_type = Helpers::get_business_data('landing_integration_type');
         $redirect_url = Helpers::get_business_data('landing_page_custom_url');
 
-        $custome_recaptcha = new CaptchaBuilder;
-        $custome_recaptcha->build();
-        Session::put('six_captcha', $custome_recaptcha->getPhrase());
+        // Captcha removed - keep variable for view compatibility
+        $custome_recaptcha = null;
 
         if (isset($config) && $config) {
             return view('contact-us', compact('custome_recaptcha'));
@@ -231,28 +230,7 @@ class HomeController extends Controller
             'message' => 'required',
         ]);
 
-        $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (isset($recaptcha) && $recaptcha['status'] == 1) {
-            $request->validate([
-                'g-recaptcha-response' => [
-                    function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-                        $gResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                            'secret' => $secret_key,
-                            'response' => $value,
-                            'remoteip' => \request()->ip(),
-                        ]);
-
-                        if (!$gResponse->successful()) {
-                            $fail(translate('ReCaptcha Failed'));
-                        }
-                    },
-                ],
-            ]);
-        } else if (strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
-            Toastr::error(translate('messages.ReCAPTCHA Failed'));
-            return back();
-        }
+        // Captcha validation removed — accept contact submissions without captcha checks
 
         $contact = new Contact;
         $contact->name = $request->name;

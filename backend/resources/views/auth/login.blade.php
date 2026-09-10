@@ -868,7 +868,7 @@
                                 value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}"
                             >
                             <div class="captcha-image">
-                                <img src="<?php echo $custome_recaptcha->inline(); ?>" alt="captcha">
+                                <img src="<?php echo $custome_recaptcha ? $custome_recaptcha->inline() : ''; ?>" alt="captcha">
                                 <span class="refresh-captcha reloadCaptcha"><i class="tio-cached"></i></span>
                             </div>
                         </div>
@@ -887,7 +887,7 @@
                                 value="{{env('APP_MODE')=='dev'? session('six_captcha'):''}}"
                             >
                             <div class="captcha-image">
-                                <img src="<?php echo $custome_recaptcha->inline(); ?>" alt="captcha">
+                                <img src="<?php echo $custome_recaptcha ? $custome_recaptcha->inline() : ''; ?>" alt="captcha">
                                 <span class="refresh-captcha reloadCaptcha"><i class="tio-cached"></i></span>
                             </div>
                         </div>

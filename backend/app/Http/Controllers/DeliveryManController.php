@@ -8,7 +8,7 @@ use App\CentralLogics\Helpers;
 use App\CentralLogics\SMS_module;
 use App\Models\Admin;
 use App\Models\BusinessSetting;
-use Gregwar\Captcha\CaptchaBuilder;
+// Captcha generation removed
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -31,9 +31,8 @@ class DeliveryManController extends Controller
             return back();
         }
 
-        $custome_recaptcha = new CaptchaBuilder;
-        $custome_recaptcha->build();
-        Session::put('six_captcha', $custome_recaptcha->getPhrase());
+        // Captcha removed - keep variable for view compatibility
+        $custome_recaptcha = null;
 
         return view('dm-registration', compact('custome_recaptcha'));
     }
@@ -52,38 +51,7 @@ class DeliveryManController extends Controller
             return back();
         }
 
-        $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (isset($recaptcha) && $recaptcha['status'] == 1) {
-            $validator = Validator::make($request->all(), [
-                'g-recaptcha-response' => [
-                    function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-                        $gResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                            'secret' => $secret_key,
-                            'response' => $value,
-                            'remoteip' => \request()->ip(),
-                        ]);
-
-                        if (!$gResponse->successful()) {
-                            $fail(translate('ReCaptcha Failed'));
-                        }
-                    },
-                ],
-            ]);
-            if ($validator->fails()) {
-                if ($isAjax) {
-                    return response()->json(['success' => false, 'message' => $validator->errors()->first()], 422);
-                }
-                return back()->withErrors($validator);
-            }
-        } else if(session('six_captcha') != $request->custome_recaptcha)
-        {
-            if ($isAjax) {
-                return response()->json(['success' => false, 'message' => translate('messages.ReCAPTCHA Failed')], 422);
-            }
-            Toastr::error(trans('messages.ReCAPTCHA Failed'));
-            return back();
-        }
+        // Captcha validation removed — allow DM registration without captcha checks
 
         // Verify phone was OTP-verified
         if (!Session::has('dm_verified_phone')) {

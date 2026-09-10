@@ -15,7 +15,7 @@ use App\CentralLogics\StoreLogic;
 use App\CentralLogics\SMS_module;
 use Illuminate\Http\JsonResponse;
 use App\Models\SubscriptionPackage;
-use Gregwar\Captcha\CaptchaBuilder;
+// Captcha generation removed
 use App\Mail\VendorSelfRegistration;
 use Brian2694\Toastr\Facades\Toastr;
 use Illuminate\Support\Facades\Http;
@@ -43,9 +43,8 @@ class VendorController extends Controller
         $admin_commission= BusinessSetting::where('key','admin_commission')->first()?->value;
         $business_name= BusinessSetting::where('key','business_name')->first()?->value;
         $packages= SubscriptionPackage::where('status',1)->where('module_type', 'all')->latest()->get();
-        $custome_recaptcha = new CaptchaBuilder;
-        $custome_recaptcha->build();
-        Session::put('six_captcha', $custome_recaptcha->getPhrase());
+        // Captcha removed - keep variable for view compatibility
+        $custome_recaptcha = null;
 
         return view('vendor-views.auth.general-info', compact('custome_recaptcha','admin_commission','business_name','packages' ));
     }

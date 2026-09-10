@@ -17,7 +17,7 @@ use App\Models\PhoneVerification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\SubscriptionPackage;
-use Gregwar\Captcha\CaptchaBuilder;
+// Captcha generation removed - no external captcha library used here anymore
 use Illuminate\Support\Facades\App;
 use App\Http\Controllers\Controller;
 use App\Mail\AdminPasswordResetMail;
@@ -90,9 +90,8 @@ class LoginController extends Controller
         $site_direction = $siteDirections[$role];
         $locale = $locals[$role];
         App::setLocale($locale);
-        $custome_recaptcha = new CaptchaBuilder;
-        $custome_recaptcha->build();
-        Session::put('six_captcha', $custome_recaptcha->getPhrase());
+        // Captcha removed for local/dev testing and to simplify automated logins
+        $custome_recaptcha = null;
 
         $email = null;
         $password = null;
@@ -161,31 +160,7 @@ class LoginController extends Controller
             'role' => 'required'
         ]);
 // dd($request->all());
-        // Temporarily bypass CAPTCHA checks for local testing
-        $bypassCaptcha = true;
-
-        $recaptcha = Helpers::get_business_settings('recaptcha');
-        if (!$bypassCaptcha && isset($recaptcha) && $recaptcha['status'] == 1 && !$request?->set_default_captcha) {
-            $request->validate([
-                'g-recaptcha-response' => [
-                    function ($attribute, $value, $fail) {
-                        $secret_key = Helpers::get_business_settings('recaptcha')['secret_key'];
-                        $gResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-                            'secret' => $secret_key,
-                            'response' => $value,
-                            'remoteip' => \request()->ip(),
-                        ]);
-
-                        if (!$gResponse->successful() || !$gResponse->json('success')) {
-                            $fail(translate('ReCaptcha Failed'));
-                        }
-                    },
-                ],
-            ]);
-        } else if (!$bypassCaptcha && strtolower(session('six_captcha')) != strtolower($request->custome_recaptcha)) {
-            Toastr::error(translate('messages.ReCAPTCHA Failed'));
-            return back();
-        }
+        // Captcha validation removed — allow login attempts without captcha checks
 
         if ($request->role == 'admin_employee') {
             $data = Admin::where('email', $request->email)->where('role_id', 1)->exists();
@@ -298,12 +273,9 @@ class LoginController extends Controller
 
     public function reloadCaptcha()
     {
-        $custome_recaptcha = new CaptchaBuilder;
-        $custome_recaptcha->build();
-        Session::put('six_captcha', $custome_recaptcha->getPhrase());
-
+        // Deprecated: captcha functionality removed. Keep endpoint for compatibility.
         return response()->json([
-            'view' => view('auth.custom-captcha', compact('custome_recaptcha'))->render()
+            'view' => ''
         ], 200);
     }
 
