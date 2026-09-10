@@ -13,6 +13,7 @@ import 'package:sixam_mart/helper/route_helper.dart';
 import 'package:sixam_mart/util/app_constants.dart';
 import 'package:sixam_mart/util/dimensions.dart';
 import 'package:sixam_mart/util/images.dart';
+import 'package:sixam_mart/util/styles.dart';
 import 'package:sixam_mart/common/widgets/no_internet_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -138,17 +139,73 @@ class SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       key: _globalKey,
       body: GetBuilder<SplashController>(builder: (splashController) {
+        if(!splashController.hasConnection) {
+          return NoInternetScreen(child: SplashScreen(body: widget.body));
+        }
+        if(splashController.configError != null) {
+          // /api/v1/config failed (e.g. HTTP 500): show the server's error
+          // message with a retry button instead of hanging on the logo forever.
+          return _ConfigErrorView(message: splashController.configError, onRetry: _route);
+        }
         return Center(
-          child: splashController.hasConnection ? Column(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(Images.logo, width: 200),
               const SizedBox(height: Dimensions.paddingSizeSmall),
               // Text(AppConstants.APP_NAME, style: robotoMedium.copyWith(fontSize: 25)),
             ],
-          ) : NoInternetScreen(child: SplashScreen(body: widget.body)),
+          ),
         );
       }),
+    );
+  }
+}
+
+class _ConfigErrorView extends StatelessWidget {
+  final String? message;
+  final VoidCallback onRetry;
+
+  const _ConfigErrorView({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(Dimensions.paddingSizeLarge),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.error_outline, size: 80, color: Theme.of(context).colorScheme.error),
+            const SizedBox(height: Dimensions.paddingSizeLarge),
+            Text(
+              'oops'.tr,
+              style: robotoBold.copyWith(fontSize: 30, color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
+            const SizedBox(height: Dimensions.paddingSizeSmall),
+            Text(
+              message ?? '',
+              textAlign: TextAlign.center,
+              style: robotoRegular.copyWith(color: Theme.of(context).hintColor),
+            ),
+            const SizedBox(height: 40),
+            InkWell(
+              onTap: onRetry,
+              child: Container(
+                width: 150,
+                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(Dimensions.radiusSmall),
+                  color: Theme.of(context).primaryColor,
+                ),
+                child: Text('retry'.tr, style: robotoMedium.copyWith(color: Colors.white)),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -1322,9 +1322,17 @@ class Helpers
         //     return $config ? json_decode($config->value, true) : null;
         // });
         $config = null;
-        $settings = Cache::rememberForever("business_settings_all_data", function () {
-            return BusinessSetting::all();
-        });
+        // Fall back to a direct query when the cache store is unavailable (e.g.
+        // CACHE_DRIVER=database with a missing/broken `cache` table), otherwise
+        // every endpoint using this helper returns HTTP 500.
+        try {
+            $settings = Cache::rememberForever("business_settings_all_data", function () {
+                return BusinessSetting::all();
+            });
+        } catch (\Throwable $e) {
+            info('Cache unavailable (key: business_settings_all_data): ' . $e->getMessage());
+            $settings = BusinessSetting::all();
+        }
 
         $data = $settings?->firstWhere('key', $name);
         if (isset($data)) {

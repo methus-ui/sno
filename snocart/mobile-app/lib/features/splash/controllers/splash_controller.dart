@@ -28,6 +28,11 @@ class SplashController extends GetxController implements GetxService {
   bool _hasConnection = true;
   bool get hasConnection => _hasConnection;
 
+  /// Non-null when /api/v1/config failed with a server/client error (not a
+  /// connectivity problem). The splash screen shows this with a retry button.
+  String? _configError;
+  String? get configError => _configError;
+
   ModuleModel? _module;
   ModuleModel? get module => _module;
 
@@ -69,6 +74,7 @@ class SplashController extends GetxController implements GetxService {
 
   Future<bool> getConfigData({bool loadModuleData = false, bool loadLandingData = false}) async {
     _hasConnection = true;
+    _configError = null;
     _moduleIndex = 0;
     Response response = await splashServiceInterface.getConfigData();
     bool isSuccess = false;
@@ -87,6 +93,14 @@ class SplashController extends GetxController implements GetxService {
     }else {
       if(response.statusText == ApiClient.noInternetMessage) {
         _hasConnection = false;
+      }else if(response.statusCode == 1) {
+        // Request-level failure (timeout / socket exception) — treated as a
+        // connectivity problem so the NoInternet screen with retry is shown.
+        _hasConnection = false;
+      }else {
+        // Server error (e.g. HTTP 500 from /api/v1/config) — surface the reason
+        // on the splash screen instead of hanging on the logo forever.
+        _configError = response.statusText ?? 'Failed to load app configuration (HTTP ${response.statusCode ?? 'error'})';
       }
       isSuccess = false;
     }
